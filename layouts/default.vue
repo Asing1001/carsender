@@ -87,8 +87,8 @@
         drawer: true,
         fixed: false,
         items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+          { icon: 'apps', title: '預約', to: '/' },
+          { icon: 'bubble_chart', title: '取消預約', to: '/cancel' }
         ],
         miniVariant: false,
         right: true,
