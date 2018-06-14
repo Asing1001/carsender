@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "nuxt": "^1.0.0",
+    "vuelidate": "^0.7.4",
     "vuetify": "^1.0.0"
   },
   "devDependencies": {
