@@ -12,7 +12,7 @@
           router
           :to="item.to"
           :key="i"
-          v-for="(item, i) in items"
+          v-for="(item, i) in menuItems"
           exact
         >
           <v-list-tile-action>
@@ -20,6 +20,14 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="$store.state.authUser" @click="logout">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>登出</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -46,33 +54,12 @@
       </v-btn> -->
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn> -->
     </v-toolbar>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
-    <!-- <v-navigation-drawer
-      temporary
-      :right="right"
-      v-model="rightDrawer"
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer> -->
+    </v-content>    
     <!-- <v-footer :fixed="fixed" app>
       <span>&copy; 2018</span>
     </v-footer> -->
@@ -87,13 +74,33 @@
         drawer: false,
         fixed: false,
         items: [
-          { icon: 'apps', title: '預約', to: '/' },
-          { icon: 'bubble_chart', title: '取消預約', to: '/cancel' }
+          { icon: 'add', title: '新增預約', to: '/' },
+          { icon: 'edit', title: '修改預約', to: '/edit-order' }
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
         title: '連發車輛預約'
+      }
+    },
+    computed: {
+      menuItems () {
+        let menuItems = this.items.slice()
+        if (this.$store.state.authUser) {
+          menuItems.push({ icon: 'view_list', title: '訂單管理', to: '/orders' })
+        } else {
+          menuItems.push({ icon: 'supervisor_account', title: '後台登入', to: '/login' })
+        }
+        return menuItems
+      }
+    },
+    methods: {
+      async logout () {
+        try {
+          await this.$store.dispatch('logout')
+        } catch (e) {
+          this.formError = e.message
+        }
       }
     }
   }
