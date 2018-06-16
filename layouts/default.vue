@@ -24,7 +24,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed app :clipped-left="clipped">
+    <v-toolbar fixed app :clipped-left="clipped" color="primary" dark>
       <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
       <!-- <v-btn
         icon
@@ -84,7 +84,7 @@
     data () {
       return {
         clipped: false,
-        drawer: true,
+        drawer: false,
         fixed: false,
         items: [
           { icon: 'apps', title: '預約', to: '/' },
