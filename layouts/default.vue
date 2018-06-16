@@ -74,8 +74,8 @@
         drawer: false,
         fixed: false,
         items: [
-          { icon: 'add', title: '新增預約', to: '/' },
-          { icon: 'edit', title: '修改預約', to: '/edit-order' }
+          { icon: 'add', title: '新增預約', to: '/order/create' },
+          { icon: 'edit', title: '修改預約', to: '/order/edit' }
         ],
         miniVariant: false,
         right: true,
@@ -87,7 +87,7 @@
       menuItems () {
         let menuItems = this.items.slice()
         if (this.$store.state.authUser) {
-          menuItems.push({ icon: 'view_list', title: '訂單管理', to: '/orders' })
+          menuItems.push({ icon: 'view_list', title: '訂單管理', to: '/order/list' })
         } else {
           menuItems.push({ icon: 'supervisor_account', title: '後台登入', to: '/login' })
         }
