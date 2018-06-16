@@ -2,7 +2,9 @@ import Vue from 'vue'
 import {
   Vuetify,
   VApp,
+  VAlert,
   VCard,
+  VDataTable,
   VNavigationDrawer,
   VFooter,
   VList,
@@ -15,13 +17,16 @@ import {
   VCheckbox,
   VMenu,
   VDatePicker,
-  VTimePicker
+  VTimePicker,
+  VForm
 } from 'vuetify'
 
 Vue.use(Vuetify, {
   components: {
     VApp,
     VCard,
+    VAlert,
+    VDataTable,
     VNavigationDrawer,
     VFooter,
     VList,
@@ -34,6 +39,7 @@ Vue.use(Vuetify, {
     VCheckbox,
     VMenu,
     VDatePicker,
-    VTimePicker
+    VTimePicker,
+    VForm
   }
 })
