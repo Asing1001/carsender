@@ -12,7 +12,10 @@ import {
   VToolbar,
   VTextField,
   VSelect,
-  VCheckbox
+  VCheckbox,
+  VMenu,
+  VDatePicker,
+  VTimePicker
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -28,6 +31,9 @@ Vue.use(Vuetify, {
     VToolbar,
     VTextField,
     VSelect,
-    VCheckbox
+    VCheckbox,
+    VMenu,
+    VDatePicker,
+    VTimePicker
   }
 })
