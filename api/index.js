@@ -16,9 +16,9 @@ router.use((req, res, next) => {
 
 // Add POST - /api/login
 router.post('/login', (req, res) => {
-  if (req.body.username === 'demo' && req.body.password === 'demo') {
-    req.session.authUser = { username: 'demo' }
-    return res.json({ username: 'demo' })
+  if (req.body.username === 'allen155475' && req.body.password === 'allen155475') {
+    req.session.authUser = { username: 'allen155475' }
+    return res.json({ username: 'allen155475' })
   }
   res.status(401).json({ message: 'Bad credentials' })
 })
