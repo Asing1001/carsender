@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-flex text-xs xs12>
+    <v-flex xs12>
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
             <v-card-title>
@@ -21,8 +21,8 @@
           </v-card>
         </v-dialog>
         <v-card>
-            <v-card-title>
-                <v-btn slot="activator" color="primary" dark class="mb-2" to="/order/create">新增預約</v-btn>              
+            <v-card-title class="align-baseline py-2 pl-2">
+                <v-btn slot="activator" color="primary" dark to="/order/create">新增預約</v-btn>              
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -39,7 +39,7 @@
                 rows-per-page-text="每頁筆數"
                 >
                 <template slot="items" slot-scope="{ item }">
-                    <td class="text-xs" v-for="(value, key, index) in item" v-if="!key.startsWith('_')" :key="index">{{ value }}</td>
+                    <td class="text-xs px-3" v-for="(value, key, index) in item" v-if="!key.startsWith('_')" :key="index">{{ value }}</td>
                     <td class="justify-center layout px-0">
                       <v-btn icon class="mx-0" @click="editItem(item)">
                         <v-icon color="teal">edit</v-icon>
@@ -71,15 +71,15 @@ export default {
       dialog: false,
       search: '',
       headers: [
-        { text: '預約類型', value: 'serviceType' },
-        { text: '乘車日期', value: 'pickUpDate' },
-        { text: '乘車時間', value: 'pickUpTime' },
-        { text: '乘車地址', value: 'pickUpAddress' },
-        { text: '目的地', value: 'targetAddress' },
-        { text: '姓名', value: 'name' },
-        { text: '手機', value: 'phone' },
-        { text: '人數', value: 'totalPeople' },
-        { text: '備註', value: 'remark' },
+        { text: '預約類型', value: 'serviceType', class: 'text-xs-center' },
+        { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-center' },
+        { text: '乘車時間', value: 'pickUpTime', class: 'text-xs-center' },
+        { text: '乘車地址', value: 'pickUpAddress', class: 'text-xs-center' },
+        { text: '目的地', value: 'targetAddress', class: 'text-xs-center' },
+        { text: '姓名', value: 'name', class: 'text-xs-center' },
+        { text: '手機', value: 'phone', class: 'text-xs-center' },
+        { text: '人數', value: 'totalPeople', class: 'text-xs-center' },
+        { text: '備註', value: 'remark', class: 'text-xs-center' },
         { text: '', value: 'action', sortable: false }
       ],
       editedIndex: -1,

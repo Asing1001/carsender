@@ -56,7 +56,7 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
-      <v-container>
+      <v-container :class="{'pa-1': $vuetify.breakpoint.xsOnly }">
         <nuxt />
       </v-container>
     </v-content>    

@@ -1,5 +1,6 @@
 <template>
-<form>
+<v-card class="px-3 pb-3 pt-1">
+<v-form>
     <v-select v-model="serviceType" :items="items" :error-messages="serviceTypeErrors" label="預約類型" required @change="$v.serviceType.$touch()"
         @blur="$v.serviceType.$touch()"></v-select>
     <v-menu ref="dateMenu" :close-on-content-click="false" v-model="dateMenu" :nudge-right="40" :return-value.sync="pickUpDate"
@@ -29,7 +30,8 @@
         @blur="$v.totalPeople.$touch()"></v-text-field>
     <v-text-field v-model="remark" label="備註" :error-messages="remarkErrors" :counter="200" @input="$v.remark.$touch()" @blur="$v.remark.$touch()"></v-text-field>
     <v-btn @click="submit" class="primary">送出</v-btn>
-</form>
+</v-form>
+</v-card>
 </template>
 
 <script>
