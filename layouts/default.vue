@@ -88,6 +88,7 @@
         let menuItems = this.items.slice()
         if (this.$store.state.authUser) {
           menuItems.push({ icon: 'view_list', title: '訂單管理', to: '/order/list' })
+          menuItems.push({ icon: 'account_circle', title: this.$store.state.authUser.username, to: '' })
         } else {
           menuItems.push({ icon: 'supervisor_account', title: '後台登入', to: '/login' })
         }
@@ -98,6 +99,7 @@
       async logout () {
         try {
           await this.$store.dispatch('logout')
+          this.$router.push('/')
         } catch (e) {
           this.formError = e.message
         }
