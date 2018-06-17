@@ -18,7 +18,8 @@ import {
   VMenu,
   VDatePicker,
   VTimePicker,
-  VForm
+  VForm,
+  VDialog
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -40,6 +41,7 @@ Vue.use(Vuetify, {
     VMenu,
     VDatePicker,
     VTimePicker,
-    VForm
+    VForm,
+    VDialog
   }
 })
