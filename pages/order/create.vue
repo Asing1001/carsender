@@ -222,9 +222,24 @@
       }
     },
     methods: {
-      submit () {
+      async submit () {
         this.$v.$touch()
-        fetch('/api/xxx')
+        if (this.$v.$invalid) return
+        try {
+          await this.$store.dispatch('createOrder', {
+            serviceType: this.serviceType,
+            pickUpDate: this.pickUpDate,
+            pickUpTime: this.pickUpTime,
+            pickUpAddress: this.pickUpAddress,
+            targetAddress: this.targetAddress,
+            name: this.name,
+            phone: this.phone,
+            totalPeople: this.totalPeople,
+            remark: this.remark
+          })
+        } catch (err) {
+          alert(err)
+        }
       }
     }
   }
