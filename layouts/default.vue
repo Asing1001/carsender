@@ -74,8 +74,8 @@
         drawer: false,
         fixed: false,
         items: [
-          { icon: 'add', title: '新增預約', to: '/order/create' },
-          { icon: 'edit', title: '修改預約', to: '/order/edit' }
+          { icon: 'add', title: '新增預約', to: '/order/create' }
+          // { icon: 'edit', title: '修改預約', to: '/order/edit' }
         ],
         miniVariant: false,
         right: true,
