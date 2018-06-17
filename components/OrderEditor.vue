@@ -13,8 +13,26 @@
         <v-text-field slot="activator" v-model="pickUpTime" label="乘車時間*" append-icon="access_time" readonly :error-messages="pickUpTimeErrors"></v-text-field>
         <v-time-picker v-model="pickUpTime" format="24hr" @change="$refs.menu.save(pickUpTime)"></v-time-picker>
     </v-menu>
+    <v-layout row>
+      <v-flex xs5>
+        <v-select autocomplete v-model="pickUpCity" :items="cities" label="乘車縣市" item-text="cityName"></v-select>
+      </v-flex>
+      <v-spacer></v-spacer>
+      <v-flex xs6>
+        <v-select autocomplete v-model="pickUpArea" :items="pickUpCity.areas" label="乘車地區" item-text="areaName" item-value="areaName"></v-select>
+      </v-flex>
+    </v-layout>
     <v-text-field v-model="pickUpAddress" :error-messages="pickUpAddressErrors" :counter="200" label="乘車地址" required @input="$v.pickUpAddress.$touch()"
         @blur="$v.pickUpAddress.$touch()"></v-text-field>
+    <v-layout row>
+      <v-flex xs5>
+        <v-select autocomplete v-model="targetCity" :items="cities" label="目的縣市" item-text="cityName"></v-select>
+      </v-flex>
+      <v-spacer></v-spacer>
+      <v-flex xs6>
+        <v-select autocomplete v-model="targetArea" :items="targetCity.areas" label="目的地區" item-text="areaName" item-value="areaName"></v-select>
+      </v-flex>
+    </v-layout>
     <v-text-field v-model="targetAddress" :error-messages="targetAddressErrors" :counter="200" label="目的地址" required @input="$v.targetAddress.$touch()"
         @blur="$v.targetAddress.$touch()"></v-text-field>
     <v-text-field v-model="name" :error-messages="nameErrors" :counter="25" label="姓名" required @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
@@ -37,7 +55,9 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, email, maxLength } from 'vuelidate/lib/validators'
+  import cities from '~/assets/cities.json'
   export default {
+    props: ['order'],
     mixins: [validationMixin],
     validations: {
       serviceType: { required },
@@ -52,6 +72,7 @@
       remark: { maxLength: maxLength(200) }
     },
     data: () => ({
+      cities,
       serviceType: null,
       pickUpDate: null,
       dateMenu: false,
@@ -61,7 +82,11 @@
       email: '',
       phone: null,
       totalPeople: 1,
+      pickUpCity: { areas: [] },
+      pickUpArea: '',
       pickUpAddress: '',
+      targetCity: { areas: [] },
+      targetArea: '',
       targetAddress: '',
       remark: '',
       items: [
@@ -140,17 +165,22 @@
         this.$v.$touch()
         if (this.$v.$invalid) return
         try {
-          await this.$store.dispatch('createOrder', {
+          const order = await this.$store.dispatch('createOrder', {
             serviceType: this.serviceType,
             pickUpDate: this.pickUpDate,
             pickUpTime: this.pickUpTime,
+            pickUpCity: this.pickUpCity.cityName,
+            pickUpArea: this.pickUpArea,
             pickUpAddress: this.pickUpAddress,
+            targetCity: this.targetCity.cityName,
+            targetArea: this.targetArea,
             targetAddress: this.targetAddress,
             name: this.name,
             phone: this.phone,
             totalPeople: this.totalPeople,
             remark: this.remark
           })
+          alert(`恭喜您已預約成功，您的預約代號為: ${order._id}, 我們將於48小時內以訊息回覆您司機資料，謝謝您！`)
         } catch (err) {
           alert(err)
         }

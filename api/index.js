@@ -50,10 +50,26 @@ const orderSchema = new mongoose.Schema({
     required: true,
     maxlength: 20
   },
+  pickUpCity: {
+    type: String,
+    maxlength: 10
+  },
+  pickUpArea: {
+    type: String,
+    maxlength: 20
+  },
   pickUpAddress: {
     type: String,
     required: true,
     maxlength: 200
+  },
+  targetCity: {
+    type: String,
+    maxlength: 10
+  },
+  targetArea: {
+    type: String,
+    maxlength: 20
   },
   targetAddress: {
     type: String,
@@ -97,9 +113,29 @@ router.post('/orders', (req, res) => {
 router.get('/orders', (req, res) => {
   Order.find({}, (err, orders) => {
     if (err) {
-      res.status(400).json({message: err})
+      res.status(500).json({message: err})
     } else {
       res.json({ ok: true, orders })
+    }
+  })
+})
+
+router.delete('/orders/:_id', (req, res) => {
+  Order.deleteOne({_id: req.params._id}, (err) => {
+    if (err) {
+      res.status(500).json({message: err})
+    } else {
+      res.json({ ok: true })
+    }
+  })
+})
+
+router.put('/orders/:_id', (req, res) => {
+  Order.updateOne({_id: req.params._id}, req.body, (err, order) => {
+    if (err) {
+      res.status(400).json({message: err})
+    } else {
+      res.json({ ok: true, order })
     }
   })
 })

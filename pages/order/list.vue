@@ -2,23 +2,7 @@
   <v-layout>
     <v-flex xs12>
         <v-dialog v-model="dialog" max-width="500px">
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout>
-                  <order-editor></order-editor>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
-            </v-card-actions>
-          </v-card>
+          <order-editor :order="editedItem"></order-editor>
         </v-dialog>
         <v-card>
             <v-card-title class="align-baseline py-2 pl-2">
@@ -37,13 +21,22 @@
                 :items="orders"
                 :search="search"
                 rows-per-page-text="每頁筆數"
+                :rows-per-page-items="[10, 20, 50, 100]"
                 >
                 <template slot="items" slot-scope="{ item }">
-                    <td class="text-xs px-3" v-for="(value, key, index) in item" v-if="!key.startsWith('_')" :key="index">{{ value }}</td>
-                    <td class="justify-center layout px-0">
-                      <v-btn icon class="mx-0" @click="editItem(item)">
+                    <td class="text-xs-right px-2">{{ item.serviceType }}</td>
+                    <td class="text-xs-right px-2">{{ item.pickUpDate }}</td>
+                    <td class="text-xs-right px-2">{{ item.pickUpTime }}</td>
+                    <td class="text-xs-right px-2">{{ item.pickUpCity + item.pickUpArea + item.pickUpAddress }}</td>
+                    <td class="text-xs-right px-2">{{ item.targetCity + item.targetArea + item.targetAddress }}</td>
+                    <td class="text-xs-right px-2">{{ item.name }}</td>
+                    <td class="text-xs-right px-2">{{ item.phone }}</td>
+                    <td class="text-xs-right px-2">{{ item.totalPeople }}</td>
+                    <td class="text-xs-right px-2">{{ item.remark }}</td>
+                    <td class="justify layout px-0">
+                      <!-- <v-btn icon class="mx-0" @click="editItem(item)">
                         <v-icon color="teal">edit</v-icon>
-                      </v-btn>
+                      </v-btn> -->
                       <v-btn icon class="mx-0" @click="deleteItem(item)">
                         <v-icon color="pink">delete</v-icon>
                       </v-btn>
@@ -71,15 +64,15 @@ export default {
       dialog: false,
       search: '',
       headers: [
-        { text: '預約類型', value: 'serviceType', class: 'text-xs-center' },
-        { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-center' },
-        { text: '乘車時間', value: 'pickUpTime', class: 'text-xs-center' },
-        { text: '乘車地址', value: 'pickUpAddress', class: 'text-xs-center' },
-        { text: '目的地', value: 'targetAddress', class: 'text-xs-center' },
-        { text: '姓名', value: 'name', class: 'text-xs-center' },
-        { text: '手機', value: 'phone', class: 'text-xs-center' },
-        { text: '人數', value: 'totalPeople', class: 'text-xs-center' },
-        { text: '備註', value: 'remark', class: 'text-xs-center' },
+        { text: '預約類型', value: 'serviceType', class: 'text-xs-right px-2' },
+        { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-right px-2' },
+        { text: '乘車時間', value: 'pickUpTime', class: 'text-xs-right px-2' },
+        { text: '乘車地址', value: 'pickUpAddress', class: 'text-xs-right px-2' },
+        { text: '目的地', value: 'targetAddress', class: 'text-xs-right px-2' },
+        { text: '姓名', value: 'name', class: 'text-xs-right px-2' },
+        { text: '手機', value: 'phone', class: 'text-xs-right px-2' },
+        { text: '人數', value: 'totalPeople', class: 'text-xs-right px-2' },
+        { text: '備註', value: 'remark', class: 'text-xs-right px-2' },
         { text: '', value: 'action', sortable: false }
       ],
       editedIndex: -1,
@@ -129,9 +122,14 @@ export default {
       this.dialog = true
     },
 
-    deleteItem (item) {
-      const index = this.orders.indexOf(item)
-      confirm('確定移除?') && this.orders.splice(index, 1)
+    async deleteItem (item) {
+      if (confirm('確定移除?')) {
+        try {
+          await this.$store.dispatch('deleteOrder', item)
+        } catch (err) {
+          alert(err)
+        }
+      }
     },
 
     close () {
