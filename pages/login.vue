@@ -1,7 +1,7 @@
 <template>
   <v-layout align-center justify-center>
-    <v-flex xs12 sm8 md8>
-      <v-card class="elevation-12">
+    <v-flex sm8 md8>
+      <v-card class="elevation-12 ma-3">
         <v-toolbar dark color="blue lighten-1">
           <v-toolbar-title>後台登入</v-toolbar-title>
           <v-spacer></v-spacer>

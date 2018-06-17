@@ -25,14 +25,19 @@ const actions = {
   },
 
   async createOrder ({ commit }, data) {
-    await axios.post('/api/orders', data)
+    const { data: {order} } = await axios.post('/api/orders', data)
+    return order
   },
 
   async getOrders ({ commit }) {
     const { data: {orders} } = await axios.get('/api/orders')
     commit('SET_ORDERS', orders)
-  }
+  },
 
+  async deleteOrder ({ commit }, order) {
+    await axios.delete(`/api/orders/${order._id}`)
+    commit('DELETE_ORDERS', order)
+  }
 }
 
 export default actions

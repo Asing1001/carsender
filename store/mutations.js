@@ -14,6 +14,10 @@ const mutations = {
   },
   SET_ORDERS (state, orders) {
     state.orders = orders
+  },
+  DELETE_ORDERS (state, order) {
+    const index = state.orders.indexOf(order)
+    state.orders = [ ...state.orders.slice(0, index), ...state.orders.slice(index + 1) ]
   }
 }
 
