@@ -66,7 +66,7 @@
           this.formError = null
           this.$router.push('/order/list')
         } catch (e) {
-          this.formError = '無效的帳號或密碼' // e.message
+          this.formError = e.message
         }
       }
     }
