@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-flex text-xs-center>
+    <v-flex text-xs-center xs12>
         <v-card>
             <v-card-title>
                 訂單總覽
@@ -8,7 +8,7 @@
                 <v-text-field
                     v-model="search"
                     append-icon="search"
-                    label="Search"
+                    label="搜尋"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -18,13 +18,8 @@
                 :items="orders"
                 :search="search"
                 >
-                <template slot="items" slot-scope="props">
-                    <td class="text-xs-right">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.calories }}</td>
-                    <td class="text-xs-right">{{ props.item.fat }}</td>
-                    <td class="text-xs-right">{{ props.item.carbs }}</td>
-                    <td class="text-xs-right">{{ props.item.protein }}</td>
-                    <td class="text-xs-right">{{ props.item.iron }}</td>
+                <template slot="items" slot-scope="{ item }">
+                    <td class="text-xs-right" v-for="(value, key, index) in item" v-if="!key.startsWith('_')" :key="index">{{ value }}</td>
                 </template>
                 <v-alert slot="no-results" :value="true" color="error" icon="warning">
                     無符合 "{{ search }}" 的搜尋結果
@@ -37,6 +32,7 @@
 
 <script>
   export default {
+    middleware: 'auth',
     data () {
       return {
         search: '',
@@ -48,47 +44,18 @@
           { text: '目的地', value: 'targetAddress' },
           { text: '姓名', value: 'name' },
           { text: '手機', value: 'phone' },
-          { text: '人數', value: 'totalPeople' }
-        ],
-        orders: [
-        //   {
-        //     value: false,
-        //     name: 'Eclair',
-        //     calories: 262,
-        //     fat: 16.0,
-        //     carbs: 23,
-        //     protein: 6.0,
-        //     iron: '7%'
-        //   },
-        //   {
-        //     value: false,
-        //     name: 'Cupcake',
-        //     calories: 305,
-        //     fat: 3.7,
-        //     carbs: 67,
-        //     protein: 4.3,
-        //     iron: '8%'
-        //   },
-        //   {
-        //     value: false,
-        //     name: 'Gingerbread',
-        //     calories: 356,
-        //     fat: 16.0,
-        //     carbs: 49,
-        //     protein: 3.9,
-        //     iron: '16%'
-        //   },
-        //   {
-        //     value: false,
-        //     name: 'Jelly bean',
-        //     calories: 375,
-        //     fat: 0.0,
-        //     carbs: 94,
-        //     protein: 0.0,
-        //     iron: '0%'
-        //   }
+          { text: '人數', value: 'totalPeople' },
+          { text: '備註', value: 'remark' }
         ]
       }
+    },
+    computed: {
+      orders () {
+        return this.$store.state.orders
+      }
+    },
+    async created () {
+      await this.$store.dispatch('getOrders')
     }
   }
 </script>
