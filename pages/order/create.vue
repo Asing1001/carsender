@@ -11,7 +11,7 @@
           @change="$v.serviceType.$touch()"
           @blur="$v.serviceType.$touch()"
         ></v-select>
-        <v-menu
+        <v-menu          
           ref="dateMenu"
           :close-on-content-click="false"
           v-model="dateMenu"
@@ -29,6 +29,7 @@
             label="乘車日期*"
             append-icon="event"
             readonly
+            :error-messages="pickUpDateErrors"
           ></v-text-field>
         <v-date-picker v-model="pickUpDate" @input="$refs.dateMenu.save(pickUpDate)"></v-date-picker>
       </v-menu>
@@ -51,13 +52,14 @@
           label="乘車時間*"
           append-icon="access_time"
           readonly
+          :error-messages="pickUpTimeErrors"
         ></v-text-field>
         <v-time-picker v-model="pickUpTime" format="24hr" @change="$refs.menu.save(pickUpTime)"></v-time-picker>
       </v-menu>
       <v-text-field
           v-model="pickUpAddress"
           :error-messages="pickUpAddressErrors"
-          :counter="10"
+          :counter="200"
           label="乘車地址"
           required
           @input="$v.pickUpAddress.$touch()"
@@ -66,7 +68,7 @@
         <v-text-field
           v-model="targetAddress"
           :error-messages="targetAddressErrors"
-          :counter="10"
+          :counter="200"
           label="目的地址"
           required
           @input="$v.targetAddress.$touch()"
@@ -75,7 +77,7 @@
         <v-text-field
           v-model="name"
           :error-messages="nameErrors"
-          :counter="10"
+          :counter="25"
           label="姓名"
           required
           @input="$v.name.$touch()"
@@ -104,6 +106,14 @@
           @input="$v.totalPeople.$touch()"
           @blur="$v.totalPeople.$touch()"
         ></v-text-field>
+        <v-text-field
+          v-model="remark"
+          label="備註"
+          :error-messages="remarkErrors"
+          :counter="200"
+          @input="$v.remark.$touch()"
+          @blur="$v.remark.$touch()"
+        ></v-text-field>
         <v-btn @click="submit" class="primary">送出</v-btn>
       </form>
     </v-flex>
@@ -112,17 +122,20 @@
 
 <script>
   import { validationMixin } from 'vuelidate'
-  import { required, email } from 'vuelidate/lib/validators'
+  import { required, email, maxLength } from 'vuelidate/lib/validators'
   export default {
     mixins: [validationMixin],
     validations: {
-      name: { required },
-      email: { email },
       serviceType: { required },
+      pickUpDate: { required },
+      pickUpTime: { required },
+      name: { required, maxLength: maxLength(25) },
+      email: { email },
       phone: { required },
       totalPeople: { required },
-      pickUpAddress: { required },
-      targetAddress: { required }
+      pickUpAddress: { required, maxLength: maxLength(200) },
+      targetAddress: { required, maxLength: maxLength(200) },
+      remark: { maxLength: maxLength(200) }
     },
     data: () => ({
       serviceType: null,
@@ -136,6 +149,7 @@
       totalPeople: 1,
       pickUpAddress: '',
       targetAddress: '',
+      remark: '',
       items: [
         '送機 (雙北 => 桃園機場)',
         '接機 (桃園機場 => 雙北)',
@@ -146,25 +160,40 @@
       serviceTypeErrors () {
         const errors = []
         if (!this.$v.serviceType.$dirty) return errors
-        !this.$v.serviceType.required && errors.push('必填欄位')
+        !this.$v.serviceType.required && errors.push('請選擇一種類型')
+        return errors
+      },
+      pickUpDateErrors () {
+        const errors = []
+        if (!this.$v.pickUpDate.$dirty) return errors
+        !this.$v.pickUpDate.required && errors.push('請選擇日期')
+        return errors
+      },
+      pickUpTimeErrors () {
+        const errors = []
+        if (!this.$v.pickUpTime.$dirty) return errors
+        !this.$v.pickUpTime.required && errors.push('請選擇時間')
         return errors
       },
       nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
         !this.$v.name.required && errors.push('必填欄位')
+        !this.$v.name.maxLength && errors.push('超過限制長度')
         return errors
       },
       pickUpAddressErrors () {
         const errors = []
         if (!this.$v.pickUpAddress.$dirty) return errors
         !this.$v.pickUpAddress.required && errors.push('必填欄位')
+        !this.$v.pickUpAddress.maxLength && errors.push('超過限制長度')
         return errors
       },
       targetAddressErrors () {
         const errors = []
         if (!this.$v.targetAddress.$dirty) return errors
         !this.$v.targetAddress.required && errors.push('必填欄位')
+        !this.$v.targetAddress.maxLength && errors.push('超過限制長度')
         return errors
       },
       emailErrors () {
@@ -183,6 +212,12 @@
         const errors = []
         if (!this.$v.totalPeople.$dirty) return errors
         !this.$v.totalPeople.required && errors.push('必填欄位')
+        return errors
+      },
+      remarkErrors () {
+        const errors = []
+        if (!this.$v.remark.$dirty) return errors
+        !this.$v.remark.maxLength && errors.push('超過限制長度')
         return errors
       }
     },
