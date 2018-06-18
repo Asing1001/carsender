@@ -35,7 +35,7 @@
     </v-layout>
     <v-text-field v-model="targetAddress" :error-messages="targetAddressErrors" :counter="200" label="目的地址" required @input="$v.targetAddress.$touch()"
         @blur="$v.targetAddress.$touch()"></v-text-field>
-    <v-text-field v-model="name" :error-messages="nameErrors" :counter="25" label="姓名" required @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
+    <v-text-field v-model="name" name="name" :error-messages="nameErrors" :counter="25" label="姓名" required @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
     <!-- <v-text-field
           v-model="email"
           :error-messages="emailErrors"
@@ -43,7 +43,7 @@
           @input="$v.email.$touch()"
           @blur="$v.email.$touch()"
         ></v-text-field> -->
-    <v-text-field v-model="phone" :error-messages="phoneErrors" label="手機" required @input="$v.phone.$touch()" @blur="$v.phone.$touch()"></v-text-field>
+    <v-text-field v-model="phone" name="phone" :error-messages="phoneErrors" label="手機" required @input="$v.phone.$touch()" @blur="$v.phone.$touch()"></v-text-field>
     <v-text-field v-model="totalPeople" :error-messages="totalPeopleErrors" label="人數" required @input="$v.totalPeople.$touch()"
         @blur="$v.totalPeople.$touch()"></v-text-field>
     <v-text-field v-model="remark" label="備註" :error-messages="remarkErrors" :counter="200" @input="$v.remark.$touch()" @blur="$v.remark.$touch()"></v-text-field>
@@ -56,6 +56,22 @@
   import { validationMixin } from 'vuelidate'
   import { required, email, maxLength } from 'vuelidate/lib/validators'
   import cities from '~/assets/cities.json'
+  const defaultData = {
+    serviceType: null,
+    pickUpDate: null,
+    pickUpTime: null,
+    name: '',
+    email: '',
+    phone: null,
+    totalPeople: 1,
+    pickUpCity: { areas: [] },
+    pickUpArea: '',
+    pickUpAddress: '',
+    targetCity: { areas: [] },
+    targetArea: '',
+    targetAddress: '',
+    remark: ''
+  }
   export default {
     props: ['order'],
     mixins: [validationMixin],
@@ -72,23 +88,10 @@
       remark: { maxLength: maxLength(200) }
     },
     data: () => ({
-      cities,
-      serviceType: null,
-      pickUpDate: null,
+      ...defaultData,
       dateMenu: false,
-      pickUpTime: null,
       timeMenu: false,
-      name: '',
-      email: '',
-      phone: null,
-      totalPeople: 1,
-      pickUpCity: { areas: [] },
-      pickUpArea: '',
-      pickUpAddress: '',
-      targetCity: { areas: [] },
-      targetArea: '',
-      targetAddress: '',
-      remark: '',
+      cities,
       items: [
         '送機 (雙北 => 桃園機場)',
         '接機 (桃園機場 => 雙北)',
@@ -181,6 +184,8 @@
             remark: this.remark
           })
           alert(`恭喜您已預約成功，您的預約代號為: ${order._id}, 我們將於48小時內以訊息回覆您司機資料，謝謝您！`)
+          Object.assign(this.$data, this.$options.data.apply(this))
+          this.$v.$reset()
         } catch (err) {
           alert(err)
         }
