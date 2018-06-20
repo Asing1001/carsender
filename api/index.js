@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const orderApi = require('./orders')
 
 mongoose.connect(process.env.MONGODB_URI).then(
   connection => console.log('[MongoDB Connection] success'),
@@ -34,117 +35,7 @@ router.post('/logout', (req, res) => {
   res.json({ ok: true })
 })
 
-const orderSchema = new mongoose.Schema({
-  serviceType: {
-    type: String,
-    required: true,
-    maxlength: 50
-  },
-  pickUpDate: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpTime: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpCity: {
-    type: String,
-    maxlength: 10
-  },
-  pickUpArea: {
-    type: String,
-    maxlength: 20
-  },
-  pickUpAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  targetCity: {
-    type: String,
-    maxlength: 10
-  },
-  targetArea: {
-    type: String,
-    maxlength: 20
-  },
-  targetAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  name: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  phone: {
-    type: String,
-    required: true,
-    maxlength: 30
-  },
-  totalPeople: {
-    type: Number,
-    required: true,
-    max: 200,
-    min: 1
-  },
-  remark: {
-    type: String,
-    maxlength: 200
-  }
-})
-
-const Order = mongoose.model('Order', orderSchema)
-
-router.post('/orders', (req, res) => {
-  Order.create(req.body, (err, order) => {
-    if (err) {
-      res.status(400).json({message: err})
-    } else {
-      res.json({ ok: true, order })
-    }
-  })
-})
-
-router.get('/orders', (req, res) => {
-  Order.find({}, (err, orders) => {
-    if (err) {
-      res.status(500).json({message: err})
-    } else {
-      res.json({ ok: true, orders })
-    }
-  })
-})
-
-router.delete('/orders/:_id', (req, res) => {
-  Order.deleteOne({_id: req.params._id}, (err) => {
-    if (err) {
-      res.status(500).json({message: err})
-    } else {
-      res.json({ ok: true })
-    }
-  })
-})
-
-router.put('/orders/:_id', (req, res) => {
-  Order.updateOne({_id: req.params._id}, req.body, (err, order) => {
-    if (err) {
-      res.status(400).json({message: err})
-    } else {
-      res.json({ ok: true, order })
-    }
-  })
-})
-
-router.use((req, res, next) => {
-  console.log(req.body)
-  console.log(res)
-  next()
-})
+router.use(orderApi)
 
 // Export the server middleware
 module.exports = {
