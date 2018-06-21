@@ -56,6 +56,7 @@ module.exports = {
       'axios'
     ],
     extractCSS: true,
+    cssSourceMap: false,
     /*
     ** Run ESLint on save
     */
@@ -82,10 +83,10 @@ module.exports = {
     bodyParser.json(),
     // session middleware
     session({
-      secret: 'super-secret-key',
+      secret: 'lienfa-sing',
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 60000 }
+      cookie: { maxAge: 86400 }
     }),
     // Api middleware
     // We add /api/login & /api/logout routes

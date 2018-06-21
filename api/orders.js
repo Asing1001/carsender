@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const axios = require('axios')
 
 mongoose.connect(process.env.MONGODB_URI).then(
   connection => console.log('[MongoDB Connection] success'),
@@ -77,15 +78,38 @@ const isAuthenticated = (req, res, next) => {
   }
 }
 
+const getLineOrderTemplate = ({
+  serviceType,
+  pickUpDate,
+  pickUpTime,
+  pickUpCity,
+  pickUpArea,
+  pickUpAddress,
+  targetCity,
+  targetArea,
+  targetAddress,
+  name,
+  phone,
+  totalPeople,
+  remark
+}) =>
+  `${serviceType} <br>
+  訂位者: ${name} ${phone} 共${totalPeople}人 <br>
+  時間: ${pickUpDate}-${pickUpTime} <br>
+  地點: ${pickUpCity + pickUpArea + pickUpAddress} <br>
+  目的地: ${targetCity + targetArea + targetAddress} <br>
+  備註: ${remark}
+`
 const Order = mongoose.model('Order', orderSchema)
-
+const iftttHookUrl = 'https://maker.ifttt.com/trigger/order_create/with/key/' + process.env.IFTTT_HOOK
 const router = express.Router()
 router.route('/orders')
   .post((req, res) => {
     Order.create(req.body, (err, order) => {
       if (err) {
-        res.status(400).json({message: err})
+        res.status(400).json({ message: err })
       } else {
+        axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
         res.json({ ok: true, order })
       }
     })
@@ -93,7 +117,7 @@ router.route('/orders')
   .get(isAuthenticated, (req, res) => {
     Order.find({}, (err, orders) => {
       if (err) {
-        res.status(500).json({message: err})
+        res.status(500).json({ message: err })
       } else {
         res.json({ ok: true, orders })
       }
@@ -102,18 +126,18 @@ router.route('/orders')
 
 router.use(isAuthenticated).route('/orders/:_id')
   .delete((req, res) => {
-    Order.deleteOne({_id: req.params._id}, (err) => {
+    Order.deleteOne({ _id: req.params._id }, (err) => {
       if (err) {
-        res.status(500).json({message: err})
+        res.status(500).json({ message: err })
       } else {
         res.json({ ok: true })
       }
     })
   })
   .put((req, res) => {
-    Order.updateOne({_id: req.params._id}, req.body, (err, order) => {
+    Order.updateOne({ _id: req.params._id }, req.body, (err, order) => {
       if (err) {
-        res.status(400).json({message: err})
+        res.status(400).json({ message: err })
       } else {
         res.json({ ok: true, order })
       }
