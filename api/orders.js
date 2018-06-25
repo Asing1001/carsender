@@ -24,11 +24,13 @@ const orderSchema = new mongoose.Schema({
   },
   pickUpCity: {
     type: String,
-    maxlength: 10
+    maxlength: 10,
+    default: ''
   },
   pickUpArea: {
     type: String,
-    maxlength: 20
+    maxlength: 20,
+    default: ''
   },
   pickUpAddress: {
     type: String,
@@ -37,11 +39,13 @@ const orderSchema = new mongoose.Schema({
   },
   targetCity: {
     type: String,
-    maxlength: 10
+    maxlength: 10,
+    default: ''
   },
   targetArea: {
     type: String,
-    maxlength: 20
+    maxlength: 20,
+    default: ''
   },
   targetAddress: {
     type: String,
