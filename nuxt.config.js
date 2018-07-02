@@ -42,7 +42,6 @@ module.exports = {
   },
   build: {
     babel: {
-      presets: ['vue-app', 'env'],
       plugins: [
         ['transform-imports', {
           'vuetify': {
@@ -53,6 +52,7 @@ module.exports = {
       ]
     },
     vendor: [
+      'babel-polyfill',
       '~/plugins/vuetify.js',
       'axios'
     ],
