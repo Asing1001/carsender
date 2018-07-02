@@ -42,6 +42,7 @@ module.exports = {
   },
   build: {
     babel: {
+      presets: ['vue-app', 'env'],
       plugins: [
         ['transform-imports', {
           'vuetify': {
