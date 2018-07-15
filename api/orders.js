@@ -12,6 +12,11 @@ const orderSchema = new mongoose.Schema({
     required: true,
     maxlength: 50
   },
+  planeNo: {
+    type: String,
+    required: true,
+    maxlength: 200
+  },
   pickUpDate: {
     type: String,
     required: true,

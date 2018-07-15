@@ -80,7 +80,7 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: '連發車輛預約'
+        title: '接送機預約系統'
       }
     },
     computed: {
