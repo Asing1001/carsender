@@ -80,7 +80,7 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: '接送機預約系統'
+        title: '凡亨接送機預約系統'
       }
     },
     computed: {
