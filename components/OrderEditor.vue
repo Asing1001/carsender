@@ -50,7 +50,11 @@
     <v-text-field v-model="totalPeople" :error-messages="totalPeopleErrors" label="人數" required @input="$v.totalPeople.$touch()"
         @blur="$v.totalPeople.$touch()"></v-text-field>
     <v-text-field v-model="remark" label="備註" :error-messages="remarkErrors" :counter="200" @input="$v.remark.$touch()" @blur="$v.remark.$touch()"></v-text-field>
-    <p>請於48小時前預約，行李請自行斟酌後車廂空間，以利安排。</p> 
+    <p style="white-space:pre-wrap">1. 請再次確認資訊，送出後無法更改。
+2. 懇請於48小時前預約，行程欲取消或更正，請直接致電司機。
+3. 目前暫時不提供加點、舉牌、嬰兒椅服務，敬請見諒。
+4. 行李請自行斟酌空間，若超過乘載導致無法接送，恕不退費。
+5. 所有車輛皆為2.0以上規格，請享受搭乘。</p> 
     <v-btn @click="submit" class="primary">送出</v-btn>
 </v-form>
 </v-card>
