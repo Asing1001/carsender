@@ -4,7 +4,7 @@
     <v-select v-model="serviceType" :items="items" :error-messages="serviceTypeErrors" label="預約類型" required
         @change="$v.serviceType.$touch()"
         @blur="$v.serviceType.$touch()"></v-select>
-    <v-text-field v-model="planeNo" :error-messages="planeNoErrors" :counter="25" label="航班編號" required @input="$v.planeNo.$touch()"
+    <v-text-field v-model="planeNo" :error-messages="planeNoErrors" :counter="25" label="航班編號 (ex: CX-123)" required @input="$v.planeNo.$touch()"
         @blur="$v.planeNo.$touch()"></v-text-field>
     <v-menu ref="dateMenu" :close-on-content-click="false" v-model="dateMenu" :nudge-right="40" :return-value.sync="pickUpDate"
         lazy transition="scale-transition" offset-y full-width min-width="290px">
