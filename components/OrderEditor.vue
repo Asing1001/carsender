@@ -59,7 +59,7 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, email, maxLength } from 'vuelidate/lib/validators'
-  import cities from '~/assets/cities.json'
+  import cities from '~/assets/cities'
   const defaultData = {
     serviceType: null,
     planeNo: '',
