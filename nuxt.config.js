@@ -30,16 +30,6 @@ module.exports = {
   /*
   ** Build configuration
   */
-  router: {
-    base: '/',
-    extendRoutes (routes, resolve) {
-      routes.push({
-        name: 'custom',
-        path: '/',
-        component: resolve(__dirname, 'pages/order/create.vue')
-      })
-    }
-  },
   build: {
     babel: {
       plugins: [
