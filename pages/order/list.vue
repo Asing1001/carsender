@@ -32,6 +32,7 @@
                     <td class="text-xs-left px-2">{{ item.targetCity + item.targetArea + item.targetAddress }}</td>
                     <td class="text-xs-left px-2">{{ item.name }}</td>
                     <td class="text-xs-left px-2">{{ item.phone }}</td>
+                    <td class="text-xs-left px-2">{{ item.email }}</td>
                     <td class="text-xs-left px-2">{{ item.totalPeople }}</td>
                     <td class="text-xs-left px-2">{{ item.remark }}</td>
                     <td class="justify layout px-0">
@@ -73,6 +74,7 @@ export default {
         { text: '目的地', value: 'targetAddress', class: 'text-xs-left px-2' },
         { text: '姓名', value: 'name', class: 'text-xs-left px-2' },
         { text: '手機', value: 'phone', class: 'text-xs-left px-2' },
+        { text: 'email', value: 'email', class: 'text-xs-left px-2' },
         { text: '人數', value: 'totalPeople', class: 'text-xs-left px-2' },
         { text: '備註', value: 'remark', class: 'text-xs-left px-2' },
         { text: '', value: 'action', sortable: false }

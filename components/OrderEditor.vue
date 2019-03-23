@@ -38,15 +38,9 @@
     </v-layout>
     <v-text-field v-if="isPickUp" v-model="targetAddress" :error-messages="targetAddressErrors" :counter="200" label="目的地址" required @input="$v.targetAddress.$touch()"
         @blur="$v.targetAddress.$touch()"></v-text-field>
-    <v-text-field v-model="name" name="name" :error-messages="nameErrors" :counter="25" label="姓名" required @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
-    <!-- <v-text-field
-          v-model="email"
-          :error-messages="emailErrors"
-          label="E-mail"
-          @input="$v.email.$touch()"
-          @blur="$v.email.$touch()"
-        ></v-text-field> -->
+    <v-text-field v-model="name" name="name" :error-messages="nameErrors" :counter="100" label="姓名" required @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
     <v-text-field v-model="phone" name="phone" :error-messages="phoneErrors" label="手機" required @input="$v.phone.$touch()" @blur="$v.phone.$touch()"></v-text-field>
+    <v-text-field v-model="email" name="email" :error-messages="emailErrors" label="E-mail" @input="$v.email.$touch()" @blur="$v.email.$touch()"></v-text-field>
     <v-text-field v-model="totalPeople" :error-messages="totalPeopleErrors" label="人數" required @input="$v.totalPeople.$touch()"
         @blur="$v.totalPeople.$touch()"></v-text-field>
     <v-text-field v-model="remark" label="備註" :error-messages="remarkErrors" :counter="200" @input="$v.remark.$touch()" @blur="$v.remark.$touch()"></v-text-field>
@@ -89,7 +83,7 @@
       planeNo: { required, maxLength: maxLength(25) },
       pickUpDate: { required },
       pickUpTime: { required },
-      name: { required, maxLength: maxLength(25) },
+      name: { required, maxLength: maxLength(100) },
       email: { email },
       phone: { required },
       totalPeople: { required },
@@ -217,6 +211,7 @@
             targetAddress: this.targetAddress,
             name: this.name,
             phone: this.phone,
+            email: this.email,
             totalPeople: this.totalPeople,
             remark: this.remark
           })

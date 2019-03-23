@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const axios = require('axios')
 
-mongoose.connect(process.env.MONGODB_URI).then(
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_j82n80fd:j8g2vu9kqidl746vnq418ju1p1@ds049104.mlab.com:49104/heroku_j82n80fd').then(
   connection => console.log('[MongoDB Connection] success'),
   console.error.bind(console, '[MongoDB Connection] error:'))
 
@@ -60,12 +60,17 @@ const orderSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 200
+    maxlength: 100
   },
   phone: {
     type: String,
     required: true,
     maxlength: 30
+  },
+  email: {
+    type: String,
+    required: false,
+    maxlength: 100
   },
   totalPeople: {
     type: Number,
@@ -110,7 +115,7 @@ const getLineOrderTemplate = ({
   備註: ${remark}
 `
 const Order = mongoose.model('Order', orderSchema)
-const iftttHookUrl = 'https://maker.ifttt.com/trigger/order_create/with/key/' + process.env.IFTTT_HOOK
+const iftttHookUrl = process.env.IFTTT_HOOK || 'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
 const router = express.Router()
 router.route('/orders')
   .post((req, res) => {
