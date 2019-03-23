@@ -34,6 +34,7 @@
                     <td class="text-xs-left px-2">{{ item.phone }}</td>
                     <td class="text-xs-left px-2">{{ item.email }}</td>
                     <td class="text-xs-left px-2">{{ item.totalPeople }}</td>
+                    <td class="text-xs-left px-2">{{ item.luggage }}</td>
                     <td class="text-xs-left px-2">{{ item.remark }}</td>
                     <td class="justify layout px-0">
                       <!-- <v-btn icon class="mx-0" @click="editItem(item)">
@@ -76,6 +77,7 @@ export default {
         { text: '手機', value: 'phone', class: 'text-xs-left px-2' },
         { text: 'email', value: 'email', class: 'text-xs-left px-2' },
         { text: '人數', value: 'totalPeople', class: 'text-xs-left px-2' },
+        { text: '行李數', value: 'totalPeople', class: 'text-xs-left px-2' },
         { text: '備註', value: 'remark', class: 'text-xs-left px-2' },
         { text: '', value: 'action', sortable: false }
       ],
@@ -102,6 +104,7 @@ export default {
         email: '',
         phone: null,
         totalPeople: 1,
+        luggage: null,
         pickUpAddress: '',
         targetAddress: '',
         remark: ''

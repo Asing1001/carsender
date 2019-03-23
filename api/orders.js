@@ -78,6 +78,11 @@ const orderSchema = new mongoose.Schema({
     max: 200,
     min: 1
   },
+  luggage: {
+    type: String,
+    required: true,
+    maxlength: 100
+  },
   remark: {
     type: String,
     maxlength: 200

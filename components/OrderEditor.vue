@@ -43,6 +43,8 @@
     <v-text-field v-model="email" name="email" :error-messages="emailErrors" label="E-mail" @input="$v.email.$touch()" @blur="$v.email.$touch()"></v-text-field>
     <v-text-field v-model="totalPeople" :error-messages="totalPeopleErrors" label="人數" required @input="$v.totalPeople.$touch()"
         @blur="$v.totalPeople.$touch()"></v-text-field>
+    <v-text-field v-model="luggage" :error-messages="luggageErrors" label="行李數(可標明吋數)" required @input="$v.luggage.$touch()"
+        @blur="$v.luggage.$touch()"></v-text-field>
     <v-text-field v-model="remark" label="備註" :error-messages="remarkErrors" :counter="200" @input="$v.remark.$touch()" @blur="$v.remark.$touch()"></v-text-field>
     <p style="white-space:pre-wrap">1. 請再次確認資訊，送出後無法更改。
 2. 懇請於48小時前預約，行程欲取消或更正，請直接致電司機。
@@ -67,6 +69,7 @@
     email: '',
     phone: null,
     totalPeople: 1,
+    luggage: '',
     pickUpCity: { areas: [] },
     pickUpArea: '',
     pickUpAddress: '',
@@ -87,6 +90,7 @@
       email: { email },
       phone: { required },
       totalPeople: { required },
+      luggage: { required, maxLength: maxLength(100) },
       pickUpAddress: { required, maxLength: maxLength(200) },
       targetAddress: { required, maxLength: maxLength(200) },
       remark: { maxLength: maxLength(200) }
@@ -182,6 +186,12 @@
         !this.$v.totalPeople.required && errors.push('必填欄位')
         return errors
       },
+      luggageErrors () {
+        const errors = []
+        if (!this.$v.luggage.$dirty) return errors
+        !this.$v.luggage.required && errors.push('必填欄位')
+        return errors
+      },
       remarkErrors () {
         const errors = []
         if (!this.$v.remark.$dirty) return errors
@@ -213,7 +223,8 @@
             phone: this.phone,
             email: this.email,
             totalPeople: this.totalPeople,
-            remark: this.remark
+            remark: this.remark,
+            luggage: this.luggage
           })
           alert(`恭喜您已預約成功，預約代碼為: ${order._id}, 我們將於48小時內以簡訊回覆司機資料，再麻煩留意手機，謝謝您的配合！`)
           Object.assign(this.$data, this.$options.data.apply(this))
