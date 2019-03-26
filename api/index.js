@@ -1,10 +1,5 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const orderApi = require('./orders')
-
-mongoose.connect(process.env.MONGODB_URI).then(
-  connection => console.log('[MongoDB Connection] success'),
-  console.error.bind(console, '[MongoDB Connection] error:'))
 
 // Create express router
 const router = express.Router()
