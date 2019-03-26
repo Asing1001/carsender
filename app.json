@@ -8,18 +8,7 @@
     }
   ],
   "env": {
-    "HOST": {
-      "required": true
-    },
-    "IFTTT_HOOK": {
-      "required": true
-    },
-    "MONGODB_URI": {
-      "required": true
-    },
-    "NPM_CONFIG_PRODUCTION": {
-      "required": true
-    }
+    
   },
   "formation": {
     "web": {
