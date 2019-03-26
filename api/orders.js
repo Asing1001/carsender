@@ -2,9 +2,16 @@ const express = require('express')
 const mongoose = require('mongoose')
 const axios = require('axios')
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_j82n80fd:j8g2vu9kqidl746vnq418ju1p1@ds049104.mlab.com:49104/heroku_j82n80fd').then(
-  connection => console.log('[MongoDB Connection] success'),
-  console.error.bind(console, '[MongoDB Connection] error:'))
+mongoose
+  .connect(
+    process.env.MONGODB_URI ||
+      'mongodb://heroku_j82n80fd:j8g2vu9kqidl746vnq418ju1p1@ds049104.mlab.com:49104/heroku_j82n80fd',
+    { useNewUrlParser: true }
+  )
+  .then(
+    connection => console.log('[MongoDB Connection] success'),
+    console.error.bind(console, '[MongoDB Connection] error:')
+  )
 
 const orderSchema = new mongoose.Schema({
   serviceType: {
@@ -120,9 +127,12 @@ const getLineOrderTemplate = ({
   備註: ${remark}
 `
 const Order = mongoose.model('Order', orderSchema)
-const iftttHookUrl = process.env.IFTTT_HOOK || 'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
+const iftttHookUrl =
+  process.env.IFTTT_HOOK ||
+  'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
 const router = express.Router()
-router.route('/orders')
+router
+  .route('/orders')
   .post((req, res) => {
     Order.create(req.body, (err, order) => {
       if (err) {
@@ -143,9 +153,11 @@ router.route('/orders')
     })
   })
 
-router.use(isAuthenticated).route('/orders/:_id')
+router
+  .use(isAuthenticated)
+  .route('/orders/:_id')
   .delete((req, res) => {
-    Order.deleteOne({ _id: req.params._id }, (err) => {
+    Order.deleteOne({ _id: req.params._id }, err => {
       if (err) {
         res.status(500).json({ message: err })
       } else {

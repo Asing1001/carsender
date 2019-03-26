@@ -6,7 +6,7 @@ const router = express.Router()
 
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
-var app = express()
+const app = express()
 router.use((req, res, next) => {
   Object.setPrototypeOf(req, app.request)
   Object.setPrototypeOf(res, app.response)
@@ -17,7 +17,10 @@ router.use((req, res, next) => {
 
 // Add POST - /api/login
 router.post('/login', (req, res) => {
-  if (req.body.username === 'allen155475' && req.body.password === 'allen155475') {
+  if (
+    req.body.username === 'allen155475' &&
+    req.body.password === 'allen155475'
+  ) {
     req.session.authUser = { username: 'allen155475' }
     return res.json({ username: 'allen155475' })
   }

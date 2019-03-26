@@ -1,47 +1,15 @@
 import Vue from 'vue'
-import {
-  Vuetify,
-  VApp,
-  VAlert,
-  VCard,
-  VDataTable,
-  VNavigationDrawer,
-  VFooter,
-  VList,
-  VBtn,
-  VIcon,
-  VGrid,
-  VToolbar,
-  VTextField,
-  VSelect,
-  VCheckbox,
-  VMenu,
-  VDatePicker,
-  VTimePicker,
-  VForm,
-  VDialog
-} from 'vuetify'
+import Vuetify from 'vuetify/lib'
+import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
-  components: {
-    VApp,
-    VCard,
-    VAlert,
-    VDataTable,
-    VNavigationDrawer,
-    VFooter,
-    VList,
-    VBtn,
-    VIcon,
-    VGrid,
-    VToolbar,
-    VTextField,
-    VSelect,
-    VCheckbox,
-    VMenu,
-    VDatePicker,
-    VTimePicker,
-    VForm,
-    VDialog
+  theme: {
+    primary: colors.blue.darken2,
+    accent: colors.grey.darken3,
+    secondary: colors.amber.darken3,
+    info: colors.teal.lighten1,
+    warning: colors.amber.base,
+    error: colors.deepOrange.accent4,
+    success: colors.green.accent3
   }
 })

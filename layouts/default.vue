@@ -1,18 +1,18 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-model="drawer"
       :mini-variant.sync="miniVariant"
       :clipped="clipped"
-      v-model="drawer"
       fixed
       app
     >
       <v-list>
         <v-list-tile
+          v-for="(item, i) in menuItems"
+          :key="i"
           router
           :to="item.to"
-          :key="i"
-          v-for="(item, i) in menuItems"
           exact
         >
           <v-list-tile-action>
@@ -56,10 +56,10 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
-      <v-container :class="{'pa-1': $vuetify.breakpoint.xsOnly }">
+      <v-container :class="{ 'pa-1': $vuetify.breakpoint.xsOnly }">
         <nuxt />
       </v-container>
-    </v-content>    
+    </v-content>
     <!-- <v-footer :fixed="fixed" app>
       <span>&copy; 2018</span>
     </v-footer> -->
@@ -67,43 +67,55 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        clipped: false,
-        drawer: false,
-        fixed: false,
-        items: [
-          { icon: 'add', title: '新增預約', to: '/order/create' }
-          // { icon: 'edit', title: '修改預約', to: '/order/edit' }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: '凡亨接送機預約系統'
+export default {
+  data() {
+    return {
+      clipped: false,
+      drawer: false,
+      fixed: false,
+      items: [
+        { icon: 'add', title: '新增預約', to: '/order/create' }
+        // { icon: 'edit', title: '修改預約', to: '/order/edit' }
+      ],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: '凡亨接送機預約系統'
+    }
+  },
+  computed: {
+    menuItems() {
+      const menuItems = this.items.slice()
+      if (this.$store.state.authUser) {
+        menuItems.push({
+          icon: 'view_list',
+          title: '訂單管理',
+          to: '/order/list'
+        })
+        menuItems.push({
+          icon: 'account_circle',
+          title: this.$store.state.authUser.username,
+          to: ''
+        })
+      } else {
+        menuItems.push({
+          icon: 'supervisor_account',
+          title: '後台登入',
+          to: '/login'
+        })
       }
-    },
-    computed: {
-      menuItems () {
-        let menuItems = this.items.slice()
-        if (this.$store.state.authUser) {
-          menuItems.push({ icon: 'view_list', title: '訂單管理', to: '/order/list' })
-          menuItems.push({ icon: 'account_circle', title: this.$store.state.authUser.username, to: '' })
-        } else {
-          menuItems.push({ icon: 'supervisor_account', title: '後台登入', to: '/login' })
-        }
-        return menuItems
-      }
-    },
-    methods: {
-      async logout () {
-        try {
-          await this.$store.dispatch('logout')
-          this.$router.push('/')
-        } catch (e) {
-          this.formError = e.message
-        }
+      return menuItems
+    }
+  },
+  methods: {
+    async logout() {
+      try {
+        await this.$store.dispatch('logout')
+        this.$router.push('/')
+      } catch (e) {
+        this.formError = e.message
       }
     }
   }
+}
 </script>
