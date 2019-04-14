@@ -71,7 +71,6 @@ module.exports = {
       cookie: { maxAge: 86400 }
     }),
     // Api middleware
-    // We add /api/login & /api/logout routes
     '~/api'
   ],
 
@@ -99,6 +98,14 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+
+      // if (process.server) {
+      //   config.externals = [
+      //     nodeExternals({
+      //       whitelist: [/^vuetify/]
+      //     })
+      //   ]
+      // }
     }
   }
 }

@@ -11,7 +11,8 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
-    "test": "jest"
+    "test": "jest",
+    "api": "nodemon api/index.js --watch"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
@@ -20,6 +21,8 @@
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "line-pay": "^1.0.15",
+    "memory-cache": "^0.2.0",
     "mongoose": "^5.4.20",
     "nuxt": "^2.4.0",
     "vuelidate": "^0.7.4",
@@ -28,6 +31,7 @@
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
+    "@types/axios": "^0.14.0",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
