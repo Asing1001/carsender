@@ -1,100 +1,6 @@
 const express = require('express')
-const mongoose = require('mongoose')
-const axios = require('axios')
+const Order = require('./schema/order')
 
-mongoose
-  .connect(
-    process.env.MONGODB_URI ||
-      'mongodb://heroku_j82n80fd:j8g2vu9kqidl746vnq418ju1p1@ds049104.mlab.com:49104/heroku_j82n80fd',
-    { useNewUrlParser: true }
-  )
-  .then(
-    connection => console.log('[MongoDB Connection] success'),
-    console.error.bind(console, '[MongoDB Connection] error:')
-  )
-
-const orderSchema = new mongoose.Schema({
-  serviceType: {
-    type: String,
-    required: true,
-    maxlength: 50
-  },
-  planeNo: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  pickUpDate: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpTime: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpCity: {
-    type: String,
-    maxlength: 10,
-    default: ''
-  },
-  pickUpArea: {
-    type: String,
-    maxlength: 20,
-    default: ''
-  },
-  pickUpAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  targetCity: {
-    type: String,
-    maxlength: 10,
-    default: ''
-  },
-  targetArea: {
-    type: String,
-    maxlength: 20,
-    default: ''
-  },
-  targetAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  name: {
-    type: String,
-    required: true,
-    maxlength: 100
-  },
-  phone: {
-    type: String,
-    required: true,
-    maxlength: 30
-  },
-  email: {
-    type: String,
-    required: false,
-    maxlength: 100
-  },
-  totalPeople: {
-    type: Number,
-    required: true,
-    max: 200,
-    min: 1
-  },
-  luggage: {
-    type: String,
-    required: true,
-    maxlength: 100
-  },
-  remark: {
-    type: String,
-    maxlength: 200
-  }
-})
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -126,7 +32,7 @@ const getLineOrderTemplate = ({
   目的地: ${targetCity + targetArea + targetAddress} <br>
   備註: ${remark}
 `
-const Order = mongoose.model('Order', orderSchema)
+
 const iftttHookUrl =
   process.env.IFTTT_HOOK ||
   'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'

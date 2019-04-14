@@ -1,3 +1,4 @@
+require('./connection')
 const express = require('express')
 const orderApi = require('./orders')
 
@@ -36,7 +37,22 @@ router.post('/logout', (req, res) => {
 router.use(orderApi)
 
 // Export the server middleware
-module.exports = {
+const apiModule = {
   path: '/api',
   handler: router
 }
+
+if (require.main === module) {
+  const app = express()
+  const bodyParser = require('body-parser')
+  const session = require('express-session')
+  app.use(bodyParser.json())
+  app.use(session({secret: 'lienfa-sing'}))
+  app.use((req,res,next)=> {req.session.authUser='test'; next()})
+  app.use(apiModule.path, apiModule.handler)
+  app.listen('3000', ()=> console.log('start listening on 3000.'))
+} else {
+  console.log('api required by nuxt as a module');
+}
+
+module.exports = apiModule
