@@ -47,12 +47,17 @@ if (require.main === module) {
   const bodyParser = require('body-parser')
   const session = require('express-session')
   app.use(bodyParser.json())
-  app.use(session({secret: 'lienfa-sing'}))
-  app.use((req,res,next)=> {req.session.authUser='test'; next()})
+  app.use(
+    session({ secret: 'lienfa-sing', resave: false, saveUninitialized: false })
+  )
+  app.use((req, res, next) => {
+    req.session.authUser = 'test'
+    next()
+  })
   app.use(apiModule.path, apiModule.handler)
-  app.listen('3000', ()=> console.log('start listening on 3000.'))
+  app.listen('3000', () => console.log('start listening on 3000.'))
 } else {
-  console.log('api required by nuxt as a module');
+  console.log('api required by nuxt as a module')
 }
 
 module.exports = apiModule
