@@ -1,43 +1,79 @@
 <template>
   <div>
-    <v-carousel class="carousel" height="200">
-      <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src">
-      </v-carousel-item>
-    </v-carousel>
-    <div class="content">
-      <h1>凡亨國際租賃有限公司</h1>
-      <p>選擇凡亨，凡事亨通</p>
-      <p>機場接送、包車旅遊、醫療接駁、<br />企業長租、個人短租、新舊車買賣</p>
-      <v-btn slot="activator" color="primary" dark to="/order/create">
-        開始預約
-      </v-btn>
-    </div>
-    <section>
-      <h5 class="text-md-center">簡介</h5>
-    </section>
-    <section>
-      <h5 class="text-md-center">車輛及服務優勢</h5>
+    <v-parallax :src="backgroundImg" :height="windowHeight">
+      <v-container d-flex align-center fluid="true">
+        <div class="text-xs-center primary--text">
+          <h1>凡亨國際租賃有限公司</h1>
+          <p>選擇凡亨，凡事亨通</p>
+          <p>
+            機場接送、包車旅遊、醫療接駁、<br />企業長租、個人短租、新舊車買賣
+          </p>
+          <v-btn slot="activator" color="primary" dark to="/order/create">
+            開始預約
+          </v-btn>
+        </div>
+      </v-container>
+    </v-parallax>
+    <!-- <section class="blue-grey darken-4 pa-3">
+      <h3 class="text-xs-center font-weight-bold white--text pa-3 display-2">
+        簡介
+      </h3>
+      <p>
+        本著對服務的熱誠，致力於提供安全、專業、合法的接送服務，亦有企業長租、個人短租、新舊車買賣等的整合服務。
+      </p>
+      <p>
+        在機場接送、包車旅遊、醫療接駁、企業長租、個人短租、新舊車買賣等領域扎根多年，秉持以客為尊的精神，結合優質舒適的車輛、耐心熱誠的司機，打造專業且合法的接駁團隊，絕對是您最值得信賴的合作夥伴。
+      </p>
+    </section> -->
+    <section class="pa-3">
+      <h3 class="text-xs-center font-weight-bold  pa-3">
+        車輛及服務優勢
+      </h3>
       <v-layout justify-center wrap>
-        <v-flex v-for="(feature, index) in features" :key="index" md2 xs12>
-          <v-icon>fas fa-{{ feature.icon }}</v-icon>
-          <p>{{ feature.name }}</p>
-          <p>{{ feature.description }}</p>
+        <v-flex
+          v-for="(feature, index) in features"
+          :key="index"
+          md2
+          xs12
+          class="pa-2"
+        >
+          <p class="text-xs-center">
+            <v-icon class="teal--text">fas fa-{{ feature.icon }}</v-icon>
+          </p>
+          <p class="text-xs-center">{{ feature.name }}</p>
+          <p class="text-xs-center">{{ feature.description }}</p>
         </v-flex>
       </v-layout>
-      <h5 class="text-md-center">豐富車型</h5>
+    </section>
+    <section class="blue-grey darken-4 pa-3 white--text">
+      <h3 class="text-md-center font-weight-bold pa-3">
+        豐富車型
+      </h3>
       <v-layout justify-center wrap>
         <v-flex v-for="(car, index) in cars" :key="index" md2 xs6>
           <p>{{ car.name }}</p>
         </v-flex>
       </v-layout>
     </section>
+    <section>
+      <a href="https://line.me/R/ti/p/%40mdb4272l"
+        ><img
+          height="36"
+          border="0"
+          alt="加入好友"
+          src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
+      /></a>
+    </section>
   </div>
 </template>
 <script>
+import backgroundImg from '~/assets/img/car.jpg'
 export default {
   layout: 'home',
   data() {
     return {
+      windowHeight: this.$isServer ? 500 : window.innerHeight,
+      backgroundImg,
       features: [
         {
           icon: 'lock',
@@ -90,23 +126,8 @@ export default {
           image: '',
           name: 'TOYOTA VIOS'
         }
-      ],
-      items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg'
-        }
       ]
     }
   }
 }
 </script>
-<style lang="stylus" scoped></style>
