@@ -1,4 +1,5 @@
 require('./connection')
+require('./utils/log-axios')
 const express = require('express')
 const orderApi = require('./orders')
 
