@@ -25,8 +25,8 @@
         在機場接送、包車旅遊、醫療接駁、企業長租、個人短租、新舊車買賣等領域扎根多年，秉持以客為尊的精神，結合優質舒適的車輛、耐心熱誠的司機，打造專業且合法的接駁團隊，絕對是您最值得信賴的合作夥伴。
       </p>
     </section> -->
-    <section class="pa-3">
-      <h3 class="text-xs-center font-weight-bold  pa-3">
+    <section class="pa-3 primary--text features">
+      <h3 class="text-xs-center font-weight-bold  pa-4 features__title">
         車輛及服務優勢
       </h3>
       <v-layout justify-center wrap>
@@ -38,24 +38,34 @@
           class="pa-2"
         >
           <p class="text-xs-center">
-            <v-icon class="teal--text">fas fa-{{ feature.icon }}</v-icon>
+            <v-icon class="teal--text features__icon"
+              >fas fa-{{ feature.icon }}</v-icon
+            >
           </p>
-          <p class="text-xs-center">{{ feature.name }}</p>
+          <p class="text-xs-center font-weight-bold features__subtitle">
+            {{ feature.name }}
+          </p>
           <p class="text-xs-center">{{ feature.description }}</p>
         </v-flex>
       </v-layout>
     </section>
-    <section class="blue-grey darken-4 pa-3 white--text">
-      <h3 class="text-md-center font-weight-bold pa-3">
+    <section class="blue lighten-5 pa-4 primary--text cartypes">
+      <h3 class="text-xs-center font-weight-bold pa-4 cartypes__title">
         豐富車型
       </h3>
-      <v-layout justify-center wrap>
-        <v-flex v-for="(car, index) in cars" :key="index" md2 xs6>
-          <p>{{ car.name }}</p>
+      <v-layout class="">
+        <v-flex md6 xs12>
+          <img src="~/assets/img/car_inside.jpg" class="px-5" />
+        </v-flex>
+        <v-flex md6 xs12="px-3" class="cartypes__carname">
+          <p v-for="(car, index) in cars" :key="index">
+            <v-icon class="teal--text px-2">fas fa-angle-right</v-icon>
+            {{ car.name }}
+          </p>
         </v-flex>
       </v-layout>
     </section>
-    <section>
+    <section class="text-xs-center pa-1">
       <a href="https://line.me/R/ti/p/%40mdb4272l"
         ><img
           height="36"
@@ -131,3 +141,26 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.features{
+
+  .features__title{
+    font-size 24px
+
+  }
+ .features__icon{
+   font-size 40px
+ }
+  .features__subtitle{
+    font-size 16px
+  }
+}
+.cartypes{
+  .cartypes__title{
+    font-size 24px
+  }
+  .cartypes__carname{
+    font-size 16px
+  }
+}
+</style>
