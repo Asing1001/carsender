@@ -6,11 +6,12 @@
           <h1>凡亨國際租賃有限公司</h1>
           <p>選擇凡亨，凡事亨通</p>
           <p>
-            機場接送、包車旅遊、醫療接駁、<br />企業長租、個人短租、新舊車買賣
+            機場接送、包車旅遊、醫療接駁、
+            <br />企業長租、個人短租、新舊車買賣
           </p>
-          <v-btn slot="activator" color="primary" dark to="/order/create">
-            開始預約
-          </v-btn>
+          <v-btn slot="activator" color="primary" dark to="/order/create"
+            >開始預約</v-btn
+          >
         </div>
       </v-container>
     </v-parallax>
@@ -24,16 +25,16 @@
       <p>
         在機場接送、包車旅遊、醫療接駁、企業長租、個人短租、新舊車買賣等領域扎根多年，秉持以客為尊的精神，結合優質舒適的車輛、耐心熱誠的司機，打造專業且合法的接駁團隊，絕對是您最值得信賴的合作夥伴。
       </p>
-    </section> -->
-    <section class="pa-3 primary--text features">
-      <h3 class="text-xs-center font-weight-bold  pa-4 features__title">
+    </section>-->
+    <section class="pa-5 primary--text features">
+      <h3 class="text-xs-center font-weight-bold pa-2 features__title">
         車輛及服務優勢
       </h3>
-      <v-layout justify-center wrap>
+      <v-layout justify-center wrap class="pa-3">
         <v-flex
           v-for="(feature, index) in features"
           :key="index"
-          md2
+          sm2
           xs12
           class="pa-2"
         >
@@ -49,30 +50,40 @@
         </v-flex>
       </v-layout>
     </section>
-    <section class="blue lighten-5 pa-4 primary--text cartypes">
-      <h3 class="text-xs-center font-weight-bold pa-4 cartypes__title">
+    <section class="blue lighten-5 pa-5 primary--text cartypes">
+      <h3 class="text-xs-center font-weight-bold pa-2 cartypes__title">
         豐富車型
       </h3>
-      <v-layout class="">
-        <v-flex md6 xs12>
-          <img src="~/assets/img/car_inside.jpg" class="px-5" />
+      <v-layout wrap class="pa-3">
+        <v-flex sm6 xs12 class="text-xs-right">
+          <img src="~/assets/img/car_inside.jpg" class="cartypes_img px-4" />
         </v-flex>
-        <v-flex md6 xs12="px-3" class="cartypes__carname">
+        <v-layout
+          sm6
+          xs12
+          class="cartypes__carname px-2"
+          column
+          justify-space-between
+        >
           <p v-for="(car, index) in cars" :key="index">
             <v-icon class="teal--text px-2">fas fa-angle-right</v-icon>
             {{ car.name }}
           </p>
-        </v-flex>
+        </v-layout>
       </v-layout>
     </section>
-    <section class="text-xs-center pa-1">
-      <a href="https://line.me/R/ti/p/%40mdb4272l"
-        ><img
-          height="36"
-          border="0"
-          alt="加入好友"
-          src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
-      /></a>
+    <section class="blue-grey darken-4 pa-1">
+      <v-layout align-center justify-center>
+        <span class="white--text px-1">凡亨國際租賃有限公司</span>
+        <a href="https://line.me/R/ti/p/%40mdb4272l">
+          <img
+            height="36"
+            border="0"
+            alt="加入好友"
+            src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
+          />
+        </a>
+      </v-layout>
     </section>
   </div>
 </template>
@@ -142,25 +153,35 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.features{
-
-  .features__title{
-    font-size 24px
-
+.features {
+  .features__title {
+    font-size: 24px;
   }
- .features__icon{
-   font-size 40px
- }
-  .features__subtitle{
-    font-size 16px
+
+  .features__icon {
+    font-size: 40px;
+  }
+
+  .features__subtitle {
+    font-size: 16px;
   }
 }
-.cartypes{
-  .cartypes__title{
-    font-size 24px
+
+.cartypes {
+  .cartypes__title {
+    font-size: 24px;
   }
-  .cartypes__carname{
-    font-size 16px
+
+  .cartypes_img {
+    width: 80%;
+
+    @media screen and (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  .cartypes__carname {
+    font-size: 16px;
   }
 }
 </style>
