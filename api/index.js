@@ -2,6 +2,8 @@ require('./connection')
 require('./utils/log-axios')
 const express = require('express')
 const orderApi = require('./orders')
+const { logger } = require('./utils/logger')
+const { logExpress } = require('./utils/log-express')
 
 // Create express router
 const router = express.Router()
@@ -9,6 +11,8 @@ const router = express.Router()
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
 const app = express()
+app.use(logExpress({ logger, loggerName: 'Access' }))
+
 router.use((req, res, next) => {
   Object.setPrototypeOf(req, app.request)
   Object.setPrototypeOf(res, app.response)
@@ -44,7 +48,6 @@ const apiModule = {
 }
 
 if (require.main === module) {
-  const app = express()
   const bodyParser = require('body-parser')
   const session = require('express-session')
   app.use(bodyParser.json())

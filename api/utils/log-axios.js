@@ -1,5 +1,6 @@
 const axios = require('axios')
-const { stringifyData, logger } = require('./logger')
+const { logger } = require('./logger')
+const { stringifyData } = require('./formatMessage')
 const originalCreate = axios.create
 
 axios.create = function(...args) {
