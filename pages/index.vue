@@ -56,15 +56,9 @@
       </h3>
       <v-layout wrap class="pa-3">
         <v-flex sm6 xs12 class="text-xs-right">
-          <img src="~/assets/img/car_inside.jpg" class="cartypes_img px-4" />
+          <img src="~/assets/img/car_inside.jpg" class="cartypes_img px-3" />
         </v-flex>
-        <v-layout
-          sm6
-          xs12
-          class="cartypes__carname px-2"
-          column
-          justify-space-between
-        >
+        <v-layout sm6 xs12 class="cartypes__carname px-2 mt-3" column>
           <p v-for="(car, index) in cars" :key="index">
             <v-icon class="teal--text px-2">fas fa-angle-right</v-icon>
             {{ car.name }}
@@ -72,10 +66,10 @@
         </v-layout>
       </v-layout>
     </section>
-    <section class="blue-grey darken-4 pa-1">
+    <section class="blue-grey darken-4 pa-3">
       <v-layout align-center justify-center>
-        <span class="white--text px-1">凡亨國際租賃有限公司</span>
-        <a href="https://line.me/R/ti/p/%40mdb4272l">
+        <span class="white--text px-2">凡亨國際租賃有限公司</span>
+        <a href="https://line.me/R/ti/p/%40mdb4272l" class="d-flex">
           <img
             height="36"
             border="0"
@@ -89,12 +83,16 @@
 </template>
 <script>
 import backgroundImg from '~/assets/img/car.jpg'
+import backgroundImgPhone from '~/assets/img/car_phone.jpg'
 export default {
   layout: 'home',
   data() {
     return {
       windowHeight: this.$isServer ? 500 : window.innerHeight,
-      backgroundImg,
+      backgroundImg:
+        this.$isServer || window.innerWidth < 600
+          ? backgroundImgPhone
+          : backgroundImg,
       features: [
         {
           icon: 'lock',
@@ -125,27 +123,15 @@ export default {
       cars: [
         {
           image: '',
-          name: 'VW T6'
+          name: 'VW T5、T6'
         },
         {
           image: '',
-          name: 'VW T5'
+          name: 'BENZ、BMV'
         },
         {
           image: '',
-          name: 'BENZ'
-        },
-        {
-          image: '',
-          name: 'TOYOTA WISH'
-        },
-        {
-          image: '',
-          name: 'TOYOTA ALTIS'
-        },
-        {
-          image: '',
-          name: 'TOYOTA VIOS'
+          name: 'Lexus、Toyota Camry'
         }
       ]
     }
@@ -173,7 +159,7 @@ export default {
   }
 
   .cartypes_img {
-    width: 80%;
+    width: 70%;
 
     @media screen and (max-width: 992px) {
       width: 100%;
