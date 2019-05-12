@@ -1,9 +1,10 @@
 const express = require('express')
-const cache = require('memory-cache')
+const mongoose = require('mongoose')
+const axios = require('axios')
 const Order = require('./schema/order')
+const CarPrice = require('./schema/carPrice')
 const pay = require('./pay')
 const { logger } = require('./utils/logger')
-// const linePay = require("line-pay");
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -48,51 +49,55 @@ router.route('/confirm').get(async (req, res, next) => {
 
   try {
     const transactionId = req.query.transactionId
-    logger.info(transactionId)
-    const order = cache.get(transactionId)
-    logger.info(cache.keys())
+    const order = await Order.findById(req.query.orderId).exec()
     logger.info(order)
-    const response = await pay.confirm({
-      transactionId: transactionId,
-      amount: order.amount,
-      currency: order.currency
+    await pay.confirm({
+      transactionId,
+      amount: order.amount
     })
-    res.send(response)
+    order.transactionId = transactionId
+    Order.updateOne({ _id: order._id }, order).exec()
+    axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
+
+    res.redirect(`/order/result?orderId=${order._id}`)
   } catch (err) {
     logger.error(err)
     res.status(400).send(err)
   }
 })
 
+async function getOrderAmount(order) {
+  const car = await CarPrice.findOne({ carType: order.carType }).exec()
+  logger.info('find car for the order', car)
+  const pickUpHour = parseInt(order.pickUpTime.split(':')[0], 10)
+  const orderPrice =
+    pickUpHour > 6 && pickUpHour < 23 ? car.daytimePrice : car.nighttimePrice
+  logger.info(`pickUpHour:${pickUpHour}, orderPrice:${orderPrice}`)
+  return orderPrice
+}
+
 router
   .route('/orders')
-  .post((req, res) => {
-    Order.create(req.body, async (err, order) => {
-      if (err) {
-        res.status(400).json({ message: err })
-      } else {
-        logger.info('order create!', order)
-        order.amount = 1
-        order.currency = 'TWD'
-        // const reservation = {
-        //   productName: "My product",
-        //   amount: 1,
-        //   currency: "JPY",
-        //   confirmUrl: process.env.LINE_PAY_CONFIRM_URL || `https://${req.hostname}/pay/confirm`,
-        //   confirmUrlType: "SERVER",
-        //   orderId: `${event.source.userId}-${Date.now()}`
-        // }
-        const confirmUrl = `${req.protocol}://${req.get('host')}/api/confirm`
-        const response = await pay.reserve({ order, confirmUrl })
-        cache.put(response.info.transactionId, order)
-        // axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
-        res.json({ ok: true, paymentUrl: response.info.paymentUrl.web })
-      }
-    })
+  .post(async (req, res) => {
+    try {
+      const order = { ...req.body }
+      order.amount = await getOrderAmount(order)
+      order._id = mongoose.Types.ObjectId()
+      logger.info('order', order)
+      const confirmUrl = `${req.protocol}://${req.get('host')}/api/confirm`
+      const response = await pay.reserve({ order, confirmUrl })
+
+      order.transactionId = `reserve-${response.info.transactionId}`
+      const orderDoc = await Order.create(order)
+      logger.info('order create and reserved!', orderDoc)
+
+      res.json({ ok: true, paymentUrl: response.info.paymentUrl.web })
+    } catch (err) {
+      logger.error(err)
+      res.status(400).json({ message: err })
+    }
   })
   .get(isAuthenticated, (req, res) => {
-    const axios = require('axios')
-    axios.default.get('123')
     Order.find({}, (err, orders) => {
       if (err) {
         res.status(500).json({ message: err })

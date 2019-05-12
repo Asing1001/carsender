@@ -1,9 +1,10 @@
-require('./connection')
 require('./utils/log-axios')
 const express = require('express')
 const orderApi = require('./orders')
 const { logger } = require('./utils/logger')
 const { logExpress } = require('./utils/log-express')
+const { connect } = require('./connection')
+connect()
 
 // Create express router
 const router = express.Router()

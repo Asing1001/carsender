@@ -1,14 +1,6 @@
-// const express = require('express')
-// const mongoose = require('mongoose')
 const axios = require('axios')
+const { logger } = require('./utils/logger')
 
-// const router = express.Router()
-
-// const pay = new linePay({
-//   channelId: process.env.LINE_PAY_CHANNEL_ID || '1649897844',
-//   channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || '9c0a1cef572a6f498467b99f801dc68f',
-//   isSandbox: !process.env.LINE_PAY_CHANNEL_ID
-// });
 const isSandbox = !process.env.LINE_PAY_CHANNEL_ID
 const linePayAPI = isSandbox
   ? 'https://api-pay.line.me/v2/'
@@ -27,27 +19,23 @@ const client = axios.create({
 })
 
 async function reserve({ order, confirmUrl }) {
-  try {
-    const linePayOrder = {
-      amount: order.amount,
-      productImageUrl: '',
-      confirmUrl,
-      productName: order.serviceType,
-      currency: order.currency,
-      orderId: order._id
-    }
-    const { data } = await client.post('payments/request', linePayOrder)
-    return data // .info.paymentUrl.web
-  } catch (err) {
-    return false
+  const linePayOrder = {
+    amount: order.amount,
+    productImageUrl: '',
+    confirmUrl,
+    productName: order.serviceType,
+    currency: 'TWD',
+    orderId: order._id
+    // confirmUrlType: 'SERVER' // to indicate its web
   }
+  const { data } = await client.post('payments/request', linePayOrder)
+  return data
 }
 
 async function confirm(options) {
-  const { transactionId, amount, currency } = options
+  const { transactionId, amount, currency = 'TWD' } = options
   if (!transactionId || !amount || !currency) {
-    console.error('invalid parameters!', options)
-    return false
+    throw new Error('invalid parameters!', options)
   }
 
   const { data } = await client.post(`/payments/${transactionId}/confirm`, {

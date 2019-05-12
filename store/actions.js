@@ -24,11 +24,9 @@ const actions = {
     commit('SET_USER', null)
   },
 
-  async createOrder({ commit }, data) {
-    const {
-      data: { order }
-    } = await axios.post('/api/orders', data)
-    return order
+  async createOrder({ commit }, order) {
+    const { data } = await axios.post('/api/orders', order)
+    return data
   },
 
   async getOrders({ commit }) {
