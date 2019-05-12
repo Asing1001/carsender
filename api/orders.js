@@ -1,100 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const axios = require('axios')
-
-mongoose
-  .connect(
-    process.env.MONGODB_URI ||
-      'mongodb://heroku_j82n80fd:j8g2vu9kqidl746vnq418ju1p1@ds049104.mlab.com:49104/heroku_j82n80fd',
-    { useNewUrlParser: true }
-  )
-  .then(
-    connection => console.log('[MongoDB Connection] success'),
-    console.error.bind(console, '[MongoDB Connection] error:')
-  )
-
-const orderSchema = new mongoose.Schema({
-  serviceType: {
-    type: String,
-    required: true,
-    maxlength: 50
-  },
-  planeNo: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  pickUpDate: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpTime: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  pickUpCity: {
-    type: String,
-    maxlength: 10,
-    default: ''
-  },
-  pickUpArea: {
-    type: String,
-    maxlength: 20,
-    default: ''
-  },
-  pickUpAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  targetCity: {
-    type: String,
-    maxlength: 10,
-    default: ''
-  },
-  targetArea: {
-    type: String,
-    maxlength: 20,
-    default: ''
-  },
-  targetAddress: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  name: {
-    type: String,
-    required: true,
-    maxlength: 100
-  },
-  phone: {
-    type: String,
-    required: true,
-    maxlength: 30
-  },
-  email: {
-    type: String,
-    required: false,
-    maxlength: 100
-  },
-  totalPeople: {
-    type: Number,
-    required: true,
-    max: 200,
-    min: 1
-  },
-  luggage: {
-    type: String,
-    required: true,
-    maxlength: 100
-  },
-  remark: {
-    type: String,
-    maxlength: 200
-  }
-})
+const Order = require('./schema/order')
+const CarPrice = require('./schema/carPrice')
+const pay = require('./pay')
+const { logger } = require('./utils/logger')
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -126,22 +36,66 @@ const getLineOrderTemplate = ({
   目的地: ${targetCity + targetArea + targetAddress} <br>
   備註: ${remark}
 `
-const Order = mongoose.model('Order', orderSchema)
+
 const iftttHookUrl =
   process.env.IFTTT_HOOK ||
   'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
 const router = express.Router()
+
+router.route('/confirm').get(async (req, res, next) => {
+  if (!req.query || !req.query.transactionId) {
+    return res.status(400).send('Transaction id not found.')
+  }
+
+  try {
+    const transactionId = req.query.transactionId
+    const order = await Order.findById(req.query.orderId).exec()
+    logger.info(order)
+    await pay.confirm({
+      transactionId,
+      amount: order.amount
+    })
+    order.transactionId = transactionId
+    Order.updateOne({ _id: order._id }, order).exec()
+    axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
+
+    res.redirect(`/order/result?orderId=${order._id}`)
+  } catch (err) {
+    logger.error(err)
+    res.status(400).send(err)
+  }
+})
+
+async function getOrderAmount(order) {
+  const car = await CarPrice.findOne({ carType: order.carType }).exec()
+  logger.info('find car for the order', car)
+  const pickUpHour = parseInt(order.pickUpTime.split(':')[0], 10)
+  const orderPrice =
+    pickUpHour > 6 && pickUpHour < 23 ? car.daytimePrice : car.nighttimePrice
+  logger.info(`pickUpHour:${pickUpHour}, orderPrice:${orderPrice}`)
+  return orderPrice
+}
+
 router
   .route('/orders')
-  .post((req, res) => {
-    Order.create(req.body, (err, order) => {
-      if (err) {
-        res.status(400).json({ message: err })
-      } else {
-        axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
-        res.json({ ok: true, order })
-      }
-    })
+  .post(async (req, res) => {
+    try {
+      const order = { ...req.body }
+      order.amount = await getOrderAmount(order)
+      order._id = mongoose.Types.ObjectId()
+      logger.info('order', order)
+      const confirmUrl = `${req.protocol}://${req.get('host')}/api/confirm`
+      const response = await pay.reserve({ order, confirmUrl })
+
+      order.transactionId = `reserve-${response.info.transactionId}`
+      const orderDoc = await Order.create(order)
+      logger.info('order create and reserved!', orderDoc)
+
+      res.json({ ok: true, paymentUrl: response.info.paymentUrl.web })
+    } catch (err) {
+      logger.error(err)
+      res.status(400).json({ message: err })
+    }
   })
   .get(isAuthenticated, (req, res) => {
     Order.find({}, (err, orders) => {
@@ -155,7 +109,7 @@ router
 
 router
   .use(isAuthenticated)
-  .route('/orders/:_id')
+  .route('/order/:_id')
   .delete((req, res) => {
     Order.deleteOne({ _id: req.params._id }, err => {
       if (err) {

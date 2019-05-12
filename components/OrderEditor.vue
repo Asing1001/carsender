@@ -346,7 +346,7 @@ export default {
       this.$v.$touch()
       if (this.$v.$invalid) return
       try {
-        const order = await this.$store.dispatch('createOrder', {
+        const response = await this.$store.dispatch('createOrder', {
           serviceType: this.serviceType,
           planeNo: this.planeNo,
           pickUpDate: this.pickUpDate,
@@ -362,13 +362,10 @@ export default {
           email: this.email,
           totalPeople: this.totalPeople,
           remark: this.remark,
-          luggage: this.luggage
+          luggage: this.luggage,
+          carType: 'normal'
         })
-        alert(
-          `恭喜您已預約成功，預約代碼為: ${
-            order._id
-          }, 我們將於48小時內以簡訊回覆司機資料，再麻煩留意手機，謝謝您的配合！`
-        )
+        location.href = response.paymentUrl
         Object.assign(this.$data, this.$options.data.apply(this))
         this.$v.$reset()
       } catch (err) {
