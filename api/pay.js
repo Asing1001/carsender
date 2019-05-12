@@ -1,5 +1,6 @@
 const axios = require('axios')
-const { logger } = require('./utils/logger')
+const url = require('url')
+const fixieUrl = url.parse(process.env.FIXIE_URL || 'fixie:bYoRgDvl5AbYgZi@speedway.usefixie.com:1080')
 
 const isSandbox = !process.env.LINE_PAY_CHANNEL_ID
 const linePayAPI = isSandbox
@@ -9,13 +10,19 @@ const payHeaders = {
   'X-LINE-ChannelId': process.env.LINE_PAY_CHANNEL_ID || '1649897844',
   'X-LINE-ChannelSecret':
     process.env.LINE_PAY_CHANNEL_SECRET || '9c0a1cef572a6f498467b99f801dc68f',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 }
 
 const client = axios.create({
   baseURL: linePayAPI,
   timeout: 10000,
-  headers: payHeaders
+  headers: payHeaders,
+  // Fixie https://devcenter.heroku.com/articles/fixie#using-with-node
+  proxy: {
+    host: fixieUrl.hostname,
+    port: fixieUrl.port,
+    auth: fixieUrl.auth
+  },
 })
 
 async function reserve({ order, confirmUrl }) {
