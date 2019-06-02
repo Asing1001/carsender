@@ -5,6 +5,7 @@
         v-model="serviceType"
         :items="items"
         :error-messages="serviceTypeErrors"
+        :disabled="isPreview"
         label="預約類型"
         required
         @change="$v.serviceType.$touch()"
@@ -14,6 +15,7 @@
         v-model="planeNo"
         :error-messages="planeNoErrors"
         :counter="25"
+        :disabled="isPreview"
         label="航班編號 (ex: CX-123)"
         required
         @input="$v.planeNo.$touch()"
@@ -25,6 +27,7 @@
         :close-on-content-click="false"
         :nudge-right="40"
         :return-value.sync="pickUpDate"
+        :disabled="isPreview"
         lazy
         transition="scale-transition"
         offset-y
@@ -37,6 +40,7 @@
           label="乘車日期*"
           append-icon="event"
           readonly
+          :disabled="isPreview"
           :error-messages="pickUpDateErrors"
         ></v-text-field>
         <v-date-picker
@@ -50,6 +54,7 @@
         :close-on-content-click="false"
         :nudge-right="40"
         :return-value.sync="pickUpTime"
+        :disabled="isPreview"
         lazy
         transition="scale-transition"
         offset-y
@@ -63,6 +68,7 @@
           label="乘車時間*"
           append-icon="access_time"
           readonly
+          :disabled="isPreview"
           :error-messages="pickUpTimeErrors"
         ></v-text-field>
         <v-time-picker
@@ -79,6 +85,7 @@
             label="乘車縣市"
             item-text="cityName"
             :item-value="item => item"
+            :disabled="isPreview"
           ></v-select>
         </v-flex>
         <v-spacer></v-spacer>
@@ -86,6 +93,7 @@
           <v-select
             v-model="pickUpArea"
             :items="pickUpCity.areas"
+            :disabled="isPreview"
             label="乘車地區"
             item-text="areaName"
             item-value="areaName"
@@ -97,6 +105,7 @@
         v-model="pickUpAddress"
         :error-messages="pickUpAddressErrors"
         :counter="200"
+        :disabled="isPreview"
         label="乘車地址"
         required
         @input="$v.pickUpAddress.$touch()"
@@ -107,6 +116,7 @@
           <v-select
             v-model="targetCity"
             :items="cities"
+            :disabled="isPreview"
             label="目的縣市"
             item-text="cityName"
             :item-value="item => item"
@@ -117,6 +127,7 @@
           <v-select
             v-model="targetArea"
             :items="targetCity.areas"
+            :disabled="isPreview"
             label="目的地區"
             item-text="areaName"
             item-value="areaName"
@@ -128,6 +139,7 @@
         v-model="targetAddress"
         :error-messages="targetAddressErrors"
         :counter="200"
+        :disabled="isPreview"
         label="目的地址"
         required
         @input="$v.targetAddress.$touch()"
@@ -138,6 +150,7 @@
         name="name"
         :error-messages="nameErrors"
         :counter="100"
+        :disabled="isPreview"
         label="姓名"
         required
         @input="$v.name.$touch()"
@@ -148,6 +161,7 @@
         name="phone"
         :error-messages="phoneErrors"
         label="手機"
+        :disabled="isPreview"
         required
         @input="$v.phone.$touch()"
         @blur="$v.phone.$touch()"
@@ -156,6 +170,7 @@
         v-model="email"
         name="email"
         :error-messages="emailErrors"
+        :disabled="isPreview"
         label="E-mail"
         @input="$v.email.$touch()"
         @blur="$v.email.$touch()"
@@ -163,6 +178,7 @@
       <v-text-field
         v-model="totalPeople"
         :error-messages="totalPeopleErrors"
+        :disabled="isPreview"
         label="人數"
         required
         @input="$v.totalPeople.$touch()"
@@ -171,6 +187,7 @@
       <v-text-field
         v-model="luggage"
         :error-messages="luggageErrors"
+        :disabled="isPreview"
         label="行李數(可標明吋數)"
         required
         @input="$v.luggage.$touch()"
@@ -181,6 +198,7 @@
         label="備註"
         :error-messages="remarkErrors"
         :counter="200"
+        :disabled="isPreview"
         @input="$v.remark.$touch()"
         @blur="$v.remark.$touch()"
       ></v-text-field>
@@ -191,7 +209,8 @@
         行李請自行斟酌空間，若超過乘載導致無法接送，恕不退費。 5.
         所有車輛皆為2.0以上規格，請享受搭乘。
       </p>
-      <v-btn class="primary" @click="submit">送出</v-btn>
+      <v-btn v-if="isPreview" class="primary" @click="submit">送出</v-btn>
+      <v-btn v-else class="secondary" @click="preview">預覽</v-btn>
     </v-form>
   </v-card>
 </template>
@@ -200,6 +219,10 @@
 import { validationMixin } from 'vuelidate'
 import { required, email, maxLength } from 'vuelidate/lib/validators'
 import cities from '~/assets/cities'
+const STEP = {
+  EDIT: 'edit',
+  PREVIEW: 'preview'
+}
 const defaultData = {
   serviceType: null,
   planeNo: '',
@@ -246,9 +269,13 @@ export default {
     timeMenu: false,
     isPickUp: false,
     cities,
-    items: ['送機 (雙北 => 桃園機場)', '接機 (桃園機場 => 雙北)']
+    items: ['送機 (雙北 => 桃園機場)', '接機 (桃園機場 => 雙北)'],
+    step: STEP.EDIT
   }),
   computed: {
+    isPreview() {
+      return this.step === STEP.PREVIEW
+    },
     serviceTypeErrors() {
       const errors = []
       if (!this.$v.serviceType.$dirty) return errors
@@ -342,6 +369,11 @@ export default {
     }
   },
   methods: {
+    preview() {
+      this.$v.$touch()
+      if (this.$v.$invalid) return
+      this.step = STEP.PREVIEW
+    },
     async submit() {
       this.$v.$touch()
       if (this.$v.$invalid) return
