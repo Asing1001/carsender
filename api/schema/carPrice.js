@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const carPriceSchema = new mongoose.Schema({
+  displayName: {
+    type: String,
+    required: true,
+    maxlength: 100
+  },
   carType: {
     type: String,
     required: true,

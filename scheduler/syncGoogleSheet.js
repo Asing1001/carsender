@@ -23,6 +23,7 @@ doc.useServiceAccountAuth(creds, function(err) {
 
     const normalCarRow = rows[0]
     const normalCar = {
+      displayName: normalCarRow['車種'],
       carType: 'normal',
       daytimePrice: normalCarRow['日間價格'],
       nighttimePrice: normalCarRow['夜間價格']
@@ -30,6 +31,7 @@ doc.useServiceAccountAuth(creds, function(err) {
 
     const boxCarRow = rows[1]
     const boxCar = {
+      displayName: boxCarRow['車種'],
       carType: 'box',
       daytimePrice: boxCarRow['日間價格'],
       nighttimePrice: boxCarRow['夜間價格']
@@ -37,20 +39,17 @@ doc.useServiceAccountAuth(creds, function(err) {
 
     const cars = [normalCar, boxCar]
 
-    connect().then(connection => {
-      cars.forEach(car => {
-        CarPrice.findOneAndUpdate(
-          { carType: car.carType },
-          car,
-          (err, doc, res) => {
-            if (err) {
-              console.error(err)
-            } else {
-              console.log(doc, res)
-            }
-          }
-        )
-      })
+    connect().then(async connection => {
+      const promises = cars.map(car =>
+        CarPrice.findOneAndUpdate({ carType: car.carType }, car).exec()
+      )
+      try {
+        const carPrices = await Promise.all(promises)
+        console.log(carPrices)
+      } catch (err) {
+        console.error(err)
+      }
+      process.exit(0)
     })
   })
 })
