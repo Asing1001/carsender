@@ -202,6 +202,14 @@
         @input="$v.remark.$touch()"
         @blur="$v.remark.$touch()"
       ></v-text-field>
+      <v-select
+        v-model="carType"
+        :items="carPrices"
+        label="選擇車種"
+        item-text="displayName"
+        :item-value="item => item.carType"
+        :disabled="isPreview"
+      ></v-select>
       <p style="white-space:pre-wrap">{{ reminder }}</p>
       <v-btn v-if="isPreview" class="primary" @click="submit"
         >同意請點此付款</v-btn
@@ -215,6 +223,9 @@
 import { validationMixin } from 'vuelidate'
 import { required, email, maxLength } from 'vuelidate/lib/validators'
 import cities from '~/assets/cities'
+import { FETCH_CAR_PRICE } from '@/store/types'
+import { mapGetters } from 'vuex'
+
 const STEP = {
   EDIT: 'edit',
   PREVIEW: 'preview'
@@ -235,6 +246,7 @@ const defaultData = {
   targetCity: { areas: [] },
   targetArea: '',
   targetAddress: '',
+  carType: 'normal',
   remark: ''
 }
 export default {
@@ -270,6 +282,7 @@ export default {
     reminder: `1. 請再次確認資訊，送出後無法更改。\n2. 懇請於48小時前預約，行程欲取消或更正，請直接致電司機。\n3. 目前暫時不提供加點、舉牌、嬰兒椅服務，敬請見諒。\n4. 行李請自行斟酌空間，若超過乘載導致無法接送，恕不退費。\n5. 所有車輛皆為2.0以上規格，請享受搭乘。`
   }),
   computed: {
+    ...mapGetters(['carPrices']),
     isPreview() {
       return this.step === STEP.PREVIEW
     },
@@ -365,6 +378,9 @@ export default {
       }
     }
   },
+  async created() {
+    await this.$store.dispatch(FETCH_CAR_PRICE)
+  },
   methods: {
     preview() {
       this.$v.$touch()
@@ -392,7 +408,7 @@ export default {
           totalPeople: this.totalPeople,
           remark: this.remark,
           luggage: this.luggage,
-          carType: 'normal'
+          carType: this.carType
         })
         location.href = response.paymentUrl
         Object.assign(this.$data, this.$options.data.apply(this))

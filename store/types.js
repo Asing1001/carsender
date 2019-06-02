@@ -1,0 +1,2 @@
+export const FETCH_CAR_PRICE = 'FETCH_CAR_PRICE'
+export const SET_CAR_PRICE = 'SET_CAR_PRICE'
