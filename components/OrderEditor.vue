@@ -202,14 +202,10 @@
         @input="$v.remark.$touch()"
         @blur="$v.remark.$touch()"
       ></v-text-field>
-      <p style="white-space:pre-wrap">
-        1. 請再次確認資訊，送出後無法更改。 2.
-        懇請於48小時前預約，行程欲取消或更正，請直接致電司機。 3.
-        目前暫時不提供加點、舉牌、嬰兒椅服務，敬請見諒。 4.
-        行李請自行斟酌空間，若超過乘載導致無法接送，恕不退費。 5.
-        所有車輛皆為2.0以上規格，請享受搭乘。
-      </p>
-      <v-btn v-if="isPreview" class="primary" @click="submit">送出</v-btn>
+      <p style="white-space:pre-wrap">{{ reminder }}</p>
+      <v-btn v-if="isPreview" class="primary" @click="submit"
+        >同意請點此付款</v-btn
+      >
       <v-btn v-else class="secondary" @click="preview">預覽</v-btn>
     </v-form>
   </v-card>
@@ -270,7 +266,8 @@ export default {
     isPickUp: false,
     cities,
     items: ['送機 (雙北 => 桃園機場)', '接機 (桃園機場 => 雙北)'],
-    step: STEP.EDIT
+    step: STEP.EDIT,
+    reminder: `1. 請再次確認資訊，送出後無法更改。\n2. 懇請於48小時前預約，行程欲取消或更正，請直接致電司機。\n3. 目前暫時不提供加點、舉牌、嬰兒椅服務，敬請見諒。\n4. 行李請自行斟酌空間，若超過乘載導致無法接送，恕不退費。\n5. 所有車輛皆為2.0以上規格，請享受搭乘。`
   }),
   computed: {
     isPreview() {
