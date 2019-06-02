@@ -1,9 +1,6 @@
 <template>
   <v-layout>
     <v-flex xs12>
-      <v-dialog v-model="dialog" max-width="500px">
-        <order-editor :order="editedItem"></order-editor>
-      </v-dialog>
       <v-card>
         <v-card-title class="align-baseline py-2 pl-2">
           <v-btn slot="activator" color="primary" dark to="/order/create"
@@ -61,13 +58,9 @@
 </template>
 
 <script>
-import OrderEditor from '~/components/OrderEditor'
-
 export default {
   middleware: 'auth',
-  components: {
-    OrderEditor
-  },
+  components: {},
   data() {
     return {
       dialog: false,
