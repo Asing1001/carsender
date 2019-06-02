@@ -76,6 +76,11 @@ async function getOrderAmount(order) {
   return orderPrice
 }
 
+router.route('/carPrice').get(async (req, res) => {
+  const carPrice = await CarPrice.find({}).exec()
+  res.send(carPrice)
+})
+
 router
   .route('/orders')
   .post(async (req, res) => {
