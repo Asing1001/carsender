@@ -3,6 +3,7 @@
     <v-form>
       <v-select
         v-model="serviceType"
+        name="serviceType"
         :items="items"
         :error-messages="serviceTypeErrors"
         :disabled="isPreview"
@@ -13,6 +14,7 @@
       ></v-select>
       <v-text-field
         v-model="planeNo"
+        name="planNo"
         :error-messages="planeNoErrors"
         :counter="25"
         :disabled="isPreview"
