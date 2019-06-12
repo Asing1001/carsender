@@ -211,6 +211,7 @@
         :disabled="isPreview"
       ></v-select>
       <p style="white-space:pre-wrap">{{ reminder }}</p>
+      <embed v-if="isPreview" src="/contract.pdf" width="100%" height="400px" />
       <v-btn v-if="isPreview" class="primary" @click="submit"
         >同意請點此付款</v-btn
       >
