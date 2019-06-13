@@ -28,9 +28,6 @@
             <td class="text-xs-left px-2 nowrap">{{ item.pickUpDate }}</td>
             <td class="text-xs-left px-2">{{ item.pickUpTime }}</td>
             <td class="text-xs-left px-2">
-              {{ item.pickUpCity + item.pickUpArea + item.pickUpAddress }}
-            </td>
-            <td class="text-xs-left px-2">
               {{ item.targetCity + item.targetArea + item.targetAddress }}
             </td>
             <td class="text-xs-left px-2">{{ item.name }}</td>
@@ -42,15 +39,15 @@
             <td class="justify layout px-0">
               <!-- <v-btn icon class="mx-0" @click="editItem(item)">
                         <v-icon color="teal">edit</v-icon>
-                      </v-btn> -->
+              </v-btn>-->
               <v-btn icon class="mx-0" @click="deleteItem(item)">
                 <v-icon color="pink">delete</v-icon>
               </v-btn>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            無符合 "{{ search }}" 的搜尋結果
-          </v-alert>
+          <v-alert slot="no-results" :value="true" color="error" icon="warning"
+            >無符合 "{{ search }}" 的搜尋結果</v-alert
+          >
         </v-data-table>
       </v-card>
     </v-flex>
@@ -70,12 +67,7 @@ export default {
         { text: '航班編號', value: 'planeNo', class: 'text-xs-left px-2' },
         { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-left px-2' },
         { text: '時間', value: 'pickUpTime', class: 'text-xs-left px-2' },
-        {
-          text: '乘車地址',
-          value: 'pickUpAddress',
-          class: 'text-xs-left px-2'
-        },
-        { text: '目的地', value: 'targetAddress', class: 'text-xs-left px-2' },
+        { text: '地址', value: 'targetAddress', class: 'text-xs-left px-2' },
         { text: '姓名', value: 'name', class: 'text-xs-left px-2' },
         { text: '手機', value: 'phone', class: 'text-xs-left px-2' },
         { text: 'email', value: 'email', class: 'text-xs-left px-2' },
@@ -94,7 +86,6 @@ export default {
         email: '',
         phone: null,
         totalPeople: 1,
-        pickUpAddress: '',
         targetAddress: '',
         remark: ''
       },
@@ -108,7 +99,6 @@ export default {
         phone: null,
         totalPeople: 1,
         luggage: null,
-        pickUpAddress: '',
         targetAddress: '',
         remark: ''
       }

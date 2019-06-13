@@ -22,21 +22,6 @@ const orderSchema = new mongoose.Schema(
       required: true,
       maxlength: 20
     },
-    pickUpCity: {
-      type: String,
-      maxlength: 10,
-      default: ''
-    },
-    pickUpArea: {
-      type: String,
-      maxlength: 20,
-      default: ''
-    },
-    pickUpAddress: {
-      type: String,
-      required: true,
-      maxlength: 200
-    },
     targetCity: {
       type: String,
       maxlength: 10,

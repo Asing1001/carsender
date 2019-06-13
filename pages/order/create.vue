@@ -1,6 +1,6 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm8 md6>
+  <v-layout justify-center>
+    <v-flex xs12 sm10 md8 style="max-width:800px">
       <order-editor></order-editor>
     </v-flex>
   </v-layout>

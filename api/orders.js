@@ -18,9 +18,6 @@ const getLineOrderTemplate = ({
   serviceType,
   pickUpDate,
   pickUpTime,
-  pickUpCity,
-  pickUpArea,
-  pickUpAddress,
   targetCity,
   targetArea,
   targetAddress,
@@ -32,8 +29,7 @@ const getLineOrderTemplate = ({
   `${serviceType} <br>
   訂位者: ${name} ${phone} 共${totalPeople}人 <br>
   時間: ${pickUpDate} ${pickUpTime} <br>
-  地點: ${pickUpCity + pickUpArea + pickUpAddress} <br>
-  目的地: ${targetCity + targetArea + targetAddress} <br>
+  地址: ${targetCity + targetArea + targetAddress} <br>
   備註: ${remark}
 `
 
