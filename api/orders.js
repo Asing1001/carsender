@@ -5,6 +5,7 @@ const Order = require('./schema/order')
 const CarPrice = require('./schema/carPrice')
 const pay = require('./pay')
 const { logger } = require('./utils/logger')
+const { getCarPrice } = require('./utils/getCarPrice')
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -65,10 +66,7 @@ router.route('/confirm').get(async (req, res, next) => {
 async function getOrderAmount(order) {
   const car = await CarPrice.findOne({ carType: order.carType }).exec()
   logger.info('find car for the order', car)
-  const pickUpHour = parseInt(order.pickUpTime.split(':')[0], 10)
-  const orderPrice =
-    pickUpHour > 6 && pickUpHour < 23 ? car.daytimePrice : car.nighttimePrice
-  logger.info(`pickUpHour:${pickUpHour}, orderPrice:${orderPrice}`)
+  const orderPrice = getCarPrice({ car, pickUpTime: order.pickUpTime })
   return orderPrice
 }
 

@@ -11,6 +11,12 @@
       <v-divider></v-divider>
       <v-stepper-step step="3">付款</v-stepper-step>
     </v-stepper-header>
+    <div
+      class="text-xs-right px-4 pt-4 display-1 deep-orange--text font-weight-bold"
+    >
+      <i class="fas fa-dollar-sign"></i>
+      {{ orderPrice }}
+    </div>
     <v-stepper-items>
       <v-stepper-content step="1">
         <v-select
@@ -33,19 +39,19 @@
               label="縣市"
               item-text="cityName"
               :item-value="item => item"
-              :error-messages="targetAddressErrors"
+              :error-messages="targetCityErrors"
             ></v-select>
           </v-flex>
           <v-spacer></v-spacer>
           <v-flex xs6>
             <v-select
               v-model="targetArea"
-              :items="targetCity.areas"
-              :disabled="isPreview"
+              :items="targetAreas"
+              :disabled="isPreview || !targetAreas"
               label="地區"
               item-text="areaName"
               item-value="areaName"
-              :error-messages="targetAddressErrors"
+              :error-messages="targetAreaErrors"
             ></v-select>
           </v-flex>
         </v-layout>
@@ -58,47 +64,6 @@
           required
           @input="$v.targetAddress.$touch()"
           @blur="$v.targetAddress.$touch()"
-        ></v-text-field>
-        <v-text-field
-          v-model="totalPeople"
-          :error-messages="totalPeopleErrors"
-          :disabled="isPreview"
-          type="number"
-          label="人數"
-          required
-          @input="$v.totalPeople.$touch()"
-          @blur="$v.totalPeople.$touch()"
-        ></v-text-field>
-        <v-text-field
-          v-model="luggage"
-          :error-messages="luggageErrors"
-          :disabled="isPreview"
-          label="行李數(可標明吋數)"
-          required
-          @input="$v.luggage.$touch()"
-          @blur="$v.luggage.$touch()"
-        ></v-text-field>
-        <v-select
-          v-model="carType"
-          :items="carPrices"
-          label="選擇車種"
-          item-text="displayName"
-          :item-value="item => item.carType"
-          :disabled="isPreview"
-        ></v-select>
-        <v-btn color="primary" @click="nextStep">下一步</v-btn>
-      </v-stepper-content>
-      <v-stepper-content step="2">
-        <v-text-field
-          v-model="planeNo"
-          name="planNo"
-          :error-messages="planeNoErrors"
-          :counter="25"
-          :disabled="isPreview"
-          label="航班編號 (ex: CX-123)"
-          required
-          @input="$v.planeNo.$touch()"
-          @blur="$v.planeNo.$touch()"
         ></v-text-field>
         <v-menu
           ref="dateMenu"
@@ -157,6 +122,47 @@
           ></v-time-picker>
         </v-menu>
         <v-text-field
+          v-model="totalPeople"
+          :error-messages="totalPeopleErrors"
+          :disabled="isPreview"
+          type="number"
+          label="人數"
+          required
+          @input="$v.totalPeople.$touch()"
+          @blur="$v.totalPeople.$touch()"
+        ></v-text-field>
+        <v-text-field
+          v-model="luggage"
+          :error-messages="luggageErrors"
+          :disabled="isPreview"
+          label="行李數(可標明吋數)"
+          required
+          @input="$v.luggage.$touch()"
+          @blur="$v.luggage.$touch()"
+        ></v-text-field>
+        <v-select
+          v-model="carType"
+          :items="carPrices"
+          label="選擇車種"
+          item-text="displayName"
+          :item-value="item => item.carType"
+          :disabled="isPreview"
+        ></v-select>
+        <v-btn color="primary" @click="nextStep">下一步</v-btn>
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <v-text-field
+          v-model="planeNo"
+          name="planNo"
+          :error-messages="planeNoErrors"
+          :counter="25"
+          :disabled="isPreview"
+          label="航班編號 (ex: CX-123)"
+          required
+          @input="$v.planeNo.$touch()"
+          @blur="$v.planeNo.$touch()"
+        ></v-text-field>
+        <v-text-field
           v-model="name"
           name="name"
           :error-messages="nameErrors"
@@ -211,9 +217,10 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, email, maxLength } from 'vuelidate/lib/validators'
-import cities from '~/assets/cities'
+import cities from '@/assets/cities'
 import { FETCH_CAR_PRICE } from '@/store/types'
 import { mapGetters } from 'vuex'
+const { getCarPrice } = require('../api/utils/getCarPrice')
 
 const formNames = {
   1: 'pickUpForm',
@@ -230,7 +237,7 @@ const defaultData = {
   phone: null,
   totalPeople: 1,
   luggage: '',
-  targetCity: { areas: [] },
+  targetCity: null,
   targetArea: '',
   targetAddress: '',
   carType: 'normal',
@@ -246,36 +253,29 @@ export default {
   },
   validations: {
     serviceType: { required },
-    targetAddress: { required, maxLength: maxLength(200) },
     targetCity: { required },
     targetArea: { required },
+    targetAddress: { required, maxLength: maxLength(200) },
     luggage: { required, maxLength: maxLength(100) },
     totalPeople: { required },
-    pickUpForm: [
-      'serviceType',
-      'targetAddress',
-      'targetCity',
-      'targetArea',
-      'luggage',
-      'totalPeople'
-    ],
-
-    planeNo: { required, maxLength: maxLength(25) },
     pickUpDate: { required },
     pickUpTime: { required },
+    pickUpForm: [
+      'serviceType',
+      'targetCity',
+      'targetArea',
+      'targetAddress',
+      'luggage',
+      'totalPeople',
+      'pickUpDate',
+      'pickUpTime'
+    ],
+    planeNo: { required, maxLength: maxLength(25) },
     name: { required, maxLength: maxLength(100) },
     email: { email },
     phone: { required },
     remark: { maxLength: maxLength(200) },
-    basicInfoForm: [
-      'planeNo',
-      'pickUpDate',
-      'pickUpTime',
-      'name',
-      'phone',
-      'email',
-      'remark'
-    ]
+    basicInfoForm: ['planeNo', 'name', 'phone', 'email', 'remark']
   },
   data: () => ({
     ...defaultData,
@@ -288,6 +288,18 @@ export default {
   }),
   computed: {
     ...mapGetters(['carPrices']),
+    targetAreas() {
+      return this.targetCity ? this.targetCity.areas : null
+    },
+    orderPrice() {
+      if (!this.pickUpTime) {
+        return 0
+      }
+      return getCarPrice({
+        car: this.carPrices.find(car => car.carType === this.carType),
+        pickUpTime: this.pickUpTime
+      })
+    },
     isPickUp() {
       return this.items.indexOf(this.serviceType) === 1
     },
@@ -324,6 +336,18 @@ export default {
       if (!this.$v.name.$dirty) return errors
       !this.$v.name.required && errors.push('必填欄位')
       !this.$v.name.maxLength && errors.push('超過限制長度')
+      return errors
+    },
+    targetCityErrors() {
+      const errors = []
+      if (!this.$v.targetCity.$dirty) return errors
+      !this.$v.targetCity.required && errors.push('必填欄位')
+      return errors
+    },
+    targetAreaErrors() {
+      const errors = []
+      if (!this.$v.targetArea.$dirty) return errors
+      !this.$v.targetArea.required && errors.push('必填欄位')
       return errors
     },
     targetAddressErrors() {
@@ -364,7 +388,7 @@ export default {
       return errors
     }
   },
-  async created() {
+  async mounted() {
     await this.$store.dispatch(FETCH_CAR_PRICE)
   },
   methods: {
