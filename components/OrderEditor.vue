@@ -11,11 +11,8 @@
       <v-divider></v-divider>
       <v-stepper-step step="3">付款</v-stepper-step>
     </v-stepper-header>
-    <div
-      class="text-xs-right px-4 pt-4 display-1 deep-orange--text font-weight-bold"
-    >
-      <i class="fas fa-dollar-sign"></i>
-      {{ orderPrice }}
+    <div class="text-xs-right px-4 pt-4 teal--text font-weight-bold carprice">
+      費用試算：{{ orderPrice }}元
     </div>
     <v-stepper-items>
       <v-stepper-content step="1">
@@ -433,3 +430,8 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.carprice {
+  font-size: 24px;
+}
+</style>
