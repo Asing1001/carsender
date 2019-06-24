@@ -1,7 +1,14 @@
 const mongoose = require('mongoose')
+const { ORDER_STATUS } = require('../orderStatus')
 
 const orderSchema = new mongoose.Schema(
   {
+    status: {
+      type: String,
+      maxlength: 50,
+      default: ORDER_STATUS.CREATED,
+      validate: val => !!ORDER_STATUS[val]
+    },
     serviceType: {
       type: String,
       required: true,
@@ -83,7 +90,6 @@ const orderSchema = new mongoose.Schema(
     },
     transactionId: {
       type: String,
-      required: true,
       maxlength: 100
     }
   },

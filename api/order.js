@@ -6,6 +6,7 @@ const CarPrice = require('./schema/carPrice')
 const pay = require('./pay')
 const { logger } = require('./utils/logger')
 const { getCarPrice } = require('./utils/getCarPrice')
+const { ORDER_STATUS } = require('./orderStatus')
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -37,6 +38,7 @@ const getLineOrderTemplate = ({
 const iftttHookUrl =
   process.env.IFTTT_HOOK ||
   'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
+
 const router = express.Router()
 
 router.route('/confirm').get(async (req, res, next) => {
@@ -53,6 +55,7 @@ router.route('/confirm').get(async (req, res, next) => {
       amount: order.amount
     })
     order.transactionId = transactionId
+    order.status = ORDER_STATUS.PAID
     Order.updateOne({ _id: order._id }, order).exec()
     axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
 
@@ -75,36 +78,47 @@ router.route('/carPrice').get(async (req, res) => {
   res.send(carPrice)
 })
 
-router
-  .route('/orders')
-  .post(async (req, res) => {
-    try {
-      const order = { ...req.body }
-      order.amount = await getOrderAmount(order)
-      order._id = mongoose.Types.ObjectId()
-      logger.info('order', order)
-      const confirmUrl = `${req.protocol}://${req.get('host')}/api/confirm`
-      const response = await pay.reserve({ order, confirmUrl })
+router.route('/order').post(async (req, res) => {
+  try {
+    // reserve order required an orderId
+    const order = {
+      ...req.body,
+      _id: mongoose.Types.ObjectId()
+    }
+    order.amount = await getOrderAmount(order)
+    logger.info('order', order)
+    let redirectUrl
 
+    if (order.payment.toLowerCase() === 'line') {
+      const response = await pay.reserve({
+        order,
+        confirmUrl: `${req.protocol}://${req.get('host')}/api/confirm`
+      })
       order.transactionId = `reserve-${response.info.transactionId}`
-      const orderDoc = await Order.create(order)
-      logger.info('order create and reserved!', orderDoc)
+      redirectUrl = response.info.paymentUrl.web
+    } else {
+      redirectUrl = `/order/result?orderId=${order._id}`
+    }
 
-      res.json({ ok: true, paymentUrl: response.info.paymentUrl.web })
-    } catch (err) {
-      logger.error(err)
-      res.status(400).json({ message: err })
+    const orderDoc = await Order.create(order)
+    logger.info('order create!', orderDoc)
+
+    res.json({ ok: true, redirectUrl })
+  } catch (err) {
+    logger.error(err)
+    res.status(400).json({ message: err })
+  }
+})
+
+router.route('/orders').get(isAuthenticated, (req, res) => {
+  Order.find({}, (err, orders) => {
+    if (err) {
+      res.status(500).json({ message: err })
+    } else {
+      res.json({ ok: true, orders })
     }
   })
-  .get(isAuthenticated, (req, res) => {
-    Order.find({}, (err, orders) => {
-      if (err) {
-        res.status(500).json({ message: err })
-      } else {
-        res.json({ ok: true, orders })
-      }
-    })
-  })
+})
 
 router
   .use(isAuthenticated)

@@ -23,6 +23,7 @@
           :rows-per-page-items="[10, 20, 50, 100]"
         >
           <template slot="items" slot-scope="{ item }">
+            <td class="text-xs-left px-2">{{ item.status }}</td>
             <td class="text-xs-left px-2">{{ item.serviceType }}</td>
             <td class="text-xs-left px-2">{{ item.planeNo }}</td>
             <td class="text-xs-left px-2 nowrap">{{ item.pickUpDate }}</td>
@@ -63,6 +64,7 @@ export default {
       dialog: false,
       search: '',
       headers: [
+        { text: '狀態', value: 'status', class: 'text-xs-left px-2' },
         { text: '預約類型', value: 'serviceType', class: 'text-xs-left px-2' },
         { text: '航班編號', value: 'planeNo', class: 'text-xs-left px-2' },
         { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-left px-2' },

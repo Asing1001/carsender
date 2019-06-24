@@ -25,7 +25,7 @@ const actions = {
   },
 
   async createOrder({ commit }, order) {
-    const { data } = await axios.post('/api/orders', order)
+    const { data } = await axios.post('/api/order', order)
     return data
   },
 
@@ -37,8 +37,8 @@ const actions = {
   },
 
   async deleteOrder({ commit }, order) {
-    await axios.delete(`/api/orders/${order._id}`)
-    commit('DELETE_ORDERS', order)
+    await axios.delete(`/api/order/${order._id}`)
+    commit('DELETE_ORDER', order)
   }
 }
 

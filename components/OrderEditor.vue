@@ -202,6 +202,10 @@
         <v-btn class="secondary" @click="nextStep">下一步</v-btn>
       </v-stepper-content>
       <v-stepper-content step="3">
+        <v-radio-group v-model="payment" label="付款方式" row>
+          <v-radio label="LINE PAY" value="LINE"></v-radio>
+          <v-radio label="ATM轉帳" value="ATM"></v-radio>
+        </v-radio-group>
         <p style="white-space:pre-wrap">{{ reminder }}</p>
         <embed src="/contract.pdf" width="100%" height="400px" />
         <v-btn flat @click="previousStep">上一步</v-btn>
@@ -238,7 +242,8 @@ const defaultData = {
   targetArea: '',
   targetAddress: '',
   carType: 'normal',
-  remark: ''
+  remark: '',
+  payment: 'line'
 }
 export default {
   mixins: [validationMixin],
@@ -418,9 +423,12 @@ export default {
           totalPeople: this.totalPeople,
           remark: this.remark,
           luggage: this.luggage,
-          carType: this.carType
+          carType: this.carType,
+          payment: this.payment
         })
-        location.href = response.paymentUrl
+
+        location.href = response.redirectUrl
+
         Object.assign(this.$data, this.$options.data.apply(this))
         this.$v.$reset()
       } catch (err) {
