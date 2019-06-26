@@ -1,6 +1,4 @@
-const mongoose = require('mongoose')
-
-const carPriceSchema = new mongoose.Schema({
+module.exports = {
   displayName: {
     type: String,
     required: true,
@@ -21,7 +19,4 @@ const carPriceSchema = new mongoose.Schema({
     required: true,
     maxlength: 200
   }
-})
-
-const carPrice = mongoose.model('CarPrice', carPriceSchema)
-module.exports = carPrice
+}
