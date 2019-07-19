@@ -1,12 +1,13 @@
+import { orderLineNotify as lineNotifyOrder } from './lineNotify'
+
 const express = require('express')
 const mongoose = require('mongoose')
-const axios = require('axios')
 const Order = require('./model/order')
 const CarPrice = require('./model/carPrice')
 const pay = require('./pay')
 const { logger } = require('./utils/logger')
 const { getCarPrice } = require('./utils/getCarPrice')
-const { ORDER_STATUS } = require('./orderStatus')
+const { ORDER_STATUS } = require('./enums')
 const orderSchema = require('./model/order/schema')
 
 const isAuthenticated = (req, res, next) => {
@@ -23,10 +24,6 @@ export const getLineOrderTemplate = ({ __v, ...order }) => {
     return (prev += `${outputKey}: ${value}<br>`)
   }, '')
 }
-
-const iftttHookUrl =
-  process.env.IFTTT_HOOK ||
-  'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
 
 export const router = express.Router()
 
@@ -46,12 +43,11 @@ router.route('/confirm').get(async (req, res, next) => {
     order.transactionId = transactionId
     order.status = ORDER_STATUS.PAID
     Order.updateOne({ _id: order._id }, order).exec()
-    axios.post(iftttHookUrl, { value1: getLineOrderTemplate(order) })
-
+    lineNotifyOrder(order)
     res.redirect(`/order/result?orderId=${order._id}`)
   } catch (err) {
     logger.error(err)
-    res.status(400).send(err)
+    res.status(400).send(err.message)
   }
 })
 
@@ -78,19 +74,22 @@ router.route('/order').post(async (req, res) => {
     logger.info('order', order)
     let redirectUrl
 
-    if (order.payment.toLowerCase() === 'line') {
+    if (order.payment.toUpperCase() === 'LINE') {
       const response = await pay.reserve({
         order,
         confirmUrl: `${req.protocol}://${req.get('host')}/api/confirm`
       })
       order.transactionId = `reserve-${response.info.transactionId}`
       redirectUrl = response.info.paymentUrl.web
-    } else {
-      redirectUrl = `/order/result?orderId=${order._id}`
     }
 
     order.status = ORDER_STATUS.UNPAID
     const orderDoc = await Order.create(order)
+
+    if (order.payment.toUpperCase() === 'ATM') {
+      lineNotifyOrder(order)
+      redirectUrl = `/order/result?orderId=${order._id}`
+    }
     logger.info('order create!', orderDoc)
 
     res.json({ ok: true, redirectUrl })

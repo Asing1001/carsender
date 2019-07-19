@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { ORDER_STATUS } = require('../../orderStatus')
+const { ORDER_STATUS } = require('../../enums')
 
 module.exports = {
   status: {
