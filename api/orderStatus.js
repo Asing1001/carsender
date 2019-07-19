@@ -1,7 +1,6 @@
 const ORDER_STATUS = {
-  CREATED: 'CREATED',
-  RESERVED: 'RESERVED',
-  PAID: 'PAID',
+  UNPAID: '未付款',
+  PAID: '已付款'
 }
 
 module.exports = { ORDER_STATUS }

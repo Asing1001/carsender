@@ -6,8 +6,8 @@ module.exports = {
     'zh-cn': '狀態',
     type: String,
     maxlength: 50,
-    default: ORDER_STATUS.CREATED,
-    validate: val => !!ORDER_STATUS[val]
+    required: true,
+    validate: val => Object.values(ORDER_STATUS).includes(val)
   },
   serviceType: {
     'zh-cn': '預約類型',

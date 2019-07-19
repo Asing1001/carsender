@@ -15,7 +15,6 @@ const payHeaders = {
     process.env.LINE_PAY_CHANNEL_SECRET || '9c0a1cef572a6f498467b99f801dc68f',
   'Content-Type': 'application/json'
 }
-console.log(fixieUrl)
 const client = axios.create({
   baseURL: linePayAPI,
   timeout: 10000,

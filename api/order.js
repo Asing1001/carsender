@@ -7,6 +7,7 @@ const pay = require('./pay')
 const { logger } = require('./utils/logger')
 const { getCarPrice } = require('./utils/getCarPrice')
 const { ORDER_STATUS } = require('./orderStatus')
+const orderSchema = require('./model/order/schema')
 
 const isAuthenticated = (req, res, next) => {
   if (!req.session.authUser) {
@@ -16,30 +17,18 @@ const isAuthenticated = (req, res, next) => {
   }
 }
 
-const getLineOrderTemplate = ({
-  serviceType,
-  pickUpDate,
-  pickUpTime,
-  targetCity,
-  targetArea,
-  targetAddress,
-  name,
-  phone,
-  totalPeople,
-  remark
-}) =>
-  `${serviceType} <br>
-  訂位者: ${name} ${phone} 共${totalPeople}人 <br>
-  時間: ${pickUpDate} ${pickUpTime} <br>
-  地址: ${targetCity + targetArea + targetAddress} <br>
-  備註: ${remark}
-`
+export const getLineOrderTemplate = ({ __v, ...order }) => {
+  return Object.entries(order).reduce((prev, [key, value]) => {
+    const outputKey = (orderSchema[key] && orderSchema[key]['zh-cn']) || key
+    return (prev += `${outputKey}: ${value}<br>`)
+  }, '')
+}
 
 const iftttHookUrl =
   process.env.IFTTT_HOOK ||
   'https://maker.ifttt.com/trigger/order_create_qa/with/key/lxH04WN5F3umyo-llPSK4mOVrHs-wz6JPIsl8Tm5e8y'
 
-const router = express.Router()
+export const router = express.Router()
 
 router.route('/confirm').get(async (req, res, next) => {
   if (!req.query || !req.query.transactionId) {
@@ -100,6 +89,7 @@ router.route('/order').post(async (req, res) => {
       redirectUrl = `/order/result?orderId=${order._id}`
     }
 
+    order.status = ORDER_STATUS.UNPAID
     const orderDoc = await Order.create(order)
     logger.info('order create!', orderDoc)
 
@@ -141,5 +131,3 @@ router
       }
     })
   })
-
-module.exports = router
