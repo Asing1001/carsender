@@ -11,7 +11,7 @@ const router = express.Router()
 
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
-const app = express()
+const app = express().enable('trust proxy')
 app.use(logExpress({ logger, loggerName: 'Access' }))
 
 router.use((req, res, next) => {

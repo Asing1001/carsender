@@ -90,7 +90,7 @@ router.route('/order').post(async (req, res) => {
       lineNotifyOrder(order)
       redirectUrl = `/order/result?orderId=${order._id}`
     }
-    logger.info('order create!', orderDoc)
+    logger.info('order create!', orderDoc.toJSON())
 
     res.json({ ok: true, redirectUrl })
   } catch (err) {
