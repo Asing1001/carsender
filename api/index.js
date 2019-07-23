@@ -1,5 +1,6 @@
 require('./utils/log-axios')
 const express = require('express')
+const session = require('express-session')
 const { router: orderApi } = require('./order')
 const { logger } = require('./utils/logger')
 const { logExpress } = require('./utils/log-express')
@@ -11,8 +12,18 @@ const router = express.Router()
 
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
-const app = express().enable('trust proxy')
-app.use(logExpress({ logger, loggerName: 'Access' }))
+const app = express()
+app
+  .enable('trust proxy')
+  .use(logExpress({ logger, loggerName: 'Access' }))
+  .use(
+    session({
+      secret: 'carsender-sid',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { httpOnly: true }
+    })
+  )
 
 router.use((req, res, next) => {
   Object.setPrototypeOf(req, app.request)

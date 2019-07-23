@@ -1,4 +1,4 @@
-import { orderLineNotify as lineNotifyOrder } from './lineNotify'
+import { orderLineNotify } from './lineNotify'
 
 const express = require('express')
 const mongoose = require('mongoose')
@@ -34,16 +34,16 @@ router.route('/confirm').get(async (req, res, next) => {
 
   try {
     const transactionId = req.query.transactionId
-    const order = await Order.findById(req.query.orderId).exec()
-    logger.info(order)
+    const order = await Order.findById(req.session.orderId).exec()
+    logger.info(order.toJSON())
     await pay.confirm({
       transactionId,
       amount: order.amount
     })
     order.transactionId = transactionId
     order.status = ORDER_STATUS.PAID
-    Order.updateOne({ _id: order._id }, order).exec()
-    lineNotifyOrder(order)
+    await order.update(order).exec()
+    orderLineNotify(order.toJSON())
     res.redirect(`/order/result?orderId=${order._id}`)
   } catch (err) {
     logger.error(err)
@@ -81,13 +81,14 @@ router.route('/order').post(async (req, res) => {
       })
       order.transactionId = `reserve-${response.info.transactionId}`
       redirectUrl = response.info.paymentUrl.web
+      req.session.orderId = order._id
     }
 
     order.status = ORDER_STATUS.UNPAID
     const orderDoc = await Order.create(order)
 
     if (order.payment.toUpperCase() === 'ATM') {
-      lineNotifyOrder(order)
+      orderLineNotify(order)
       redirectUrl = `/order/result?orderId=${order._id}`
     }
     logger.info('order create!', orderDoc.toJSON())

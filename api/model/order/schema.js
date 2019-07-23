@@ -100,10 +100,12 @@ module.exports = {
     maxlength: 100
   },
   _id: {
+    'zh-cn': '訂單編號',
     type: mongoose.Types.ObjectId,
     required: true
   },
   transactionId: {
+    'zh-cn': 'LINEPAY交易號碼',
     type: String,
     maxlength: 100
   }
