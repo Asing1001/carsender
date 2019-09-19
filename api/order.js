@@ -89,7 +89,7 @@ router.route('/order').post(async (req, res) => {
 
     if (order.payment.toUpperCase() === 'ATM') {
       orderLineNotify(order)
-      redirectUrl = `/order/result?orderId=${order._id}`
+      redirectUrl = `/order/atm?orderId=${order._id}`
     }
     logger.info('order create!', orderDoc.toJSON())
 
