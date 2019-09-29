@@ -81,6 +81,11 @@
           />
         </a>
       </v-layout>
+      <v-layout align-center justify-center>
+        <span class="white--text pa-2">
+          ATM付款帳號：國泰世華銀行 (013)021035006874
+        </span>
+      </v-layout>
     </section>
   </div>
 </template>
