@@ -2,6 +2,11 @@
 
 > Nuxt.js + Vuetify.js project
 
+## CronJob
+
+- Keep flyer awake: https://cron-job.org
+- Keep googlesheet data sync to mongoDB: `yarn sync`
+
 ## Build Setup
 
 ``` bash
