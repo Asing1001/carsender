@@ -41,7 +41,9 @@ doc.useServiceAccountAuth(creds, function(err) {
 
     connect().then(async connection => {
       const promises = cars.map(car =>
-        CarPrice.findOneAndUpdate({ carType: car.carType }, car).exec()
+        CarPrice.findOneAndUpdate({ carType: car.carType }, car, {
+          upsert: true
+        }).exec()
       )
       try {
         const carPrices = await Promise.all(promises)
