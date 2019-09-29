@@ -1,6 +1,6 @@
 // see https://www.fastcomet.com/tutorials/nodejs/google-spreadsheet-package for detail
 const GoogleSpreadsheet = require('google-spreadsheet')
-const CarPrice = require('../api/schema/carPrice')
+const CarPrice = require('../api/model/carPrice')
 const { connect } = require('../api/connection')
 const creds = require('./cronjob-6fe799c40a6f.json')
 

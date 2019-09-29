@@ -13,7 +13,8 @@
     "precommit": "npm run lint",
     "test": "jest",
     "api": "nodemon --exec babel-node api/index.js --watch",
-    "e2e": "cypress open"
+    "e2e": "cypress open",
+    "sync": "node ./scheduler/syncGoogleSheet.js"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.4.1",
