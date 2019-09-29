@@ -63,6 +63,12 @@ module.exports = {
     required: true,
     maxlength: 30
   },
+  identity: {
+    'zh-cn': '身份證後四碼',
+    type: String,
+    required: true,
+    maxlength: 10
+  },
   email: {
     'zh-cn': 'email',
     type: String,
@@ -108,5 +114,11 @@ module.exports = {
     'zh-cn': 'LINEPAY交易號碼',
     type: String,
     maxlength: 100
-  }
+  },
+  payment: {
+    'zh-cn': '付款方式',
+    type: String,
+    required: true,
+    maxlength: 100
+  },
 }

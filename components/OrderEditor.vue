@@ -181,6 +181,15 @@
           @blur="$v.phone.$touch()"
         ></v-text-field>
         <v-text-field
+          v-model="identity"
+          name="identity"
+          :error-messages="identityErrors"
+          :disabled="isPreview"
+          label="身份證後四碼 (應交通法規需要)"
+          @input="$v.identity.$touch()"
+          @blur="$v.identity.$touch()"
+        ></v-text-field>
+        <v-text-field
           v-model="email"
           name="email"
           :error-messages="emailErrors"
@@ -217,7 +226,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, email, maxLength } from 'vuelidate/lib/validators'
+import { required, email, maxLength, minLength } from 'vuelidate/lib/validators'
 import cities from '@/assets/cities'
 import { FETCH_CAR_PRICE } from '@/store/types'
 import { mapGetters } from 'vuex'
@@ -235,6 +244,7 @@ const defaultData = {
   pickUpTime: null,
   name: '',
   email: '',
+  identity: '',
   phone: null,
   totalPeople: 1,
   luggage: '',
@@ -275,9 +285,14 @@ export default {
     planeNo: { required, maxLength: maxLength(25) },
     name: { required, maxLength: maxLength(100) },
     email: { email },
+    identity: {
+      required,
+      minLength: minLength(4),
+      maxLength: maxLength(4)
+    },
     phone: { required },
     remark: { maxLength: maxLength(200) },
-    basicInfoForm: ['planeNo', 'name', 'phone', 'email', 'remark']
+    basicInfoForm: ['planeNo', 'name', 'phone', 'email', 'identity', 'remark']
   },
   data: () => ({
     ...defaultData,
@@ -365,6 +380,14 @@ export default {
       !this.$v.email.email && errors.push('必須為有效的email')
       return errors
     },
+    identityErrors() {
+      const errors = []
+      if (!this.$v.identity.$dirty) return errors
+      !this.$v.identity.required && errors.push('必填欄位')
+      !this.$v.identity.minLength && errors.push('低於限制長度')
+      !this.$v.identity.maxLength && errors.push('超過限制長度')
+      return errors
+    },
     phoneErrors() {
       const errors = []
       if (!this.$v.phone.$dirty) return errors
@@ -419,6 +442,7 @@ export default {
           targetAddress: this.targetAddress,
           name: this.name,
           phone: this.phone,
+          identity: this.identity,
           email: this.email,
           totalPeople: this.totalPeople,
           remark: this.remark,

@@ -33,6 +33,7 @@
             </td>
             <td class="text-xs-left px-2">{{ item.name }}</td>
             <td class="text-xs-left px-2">{{ item.phone }}</td>
+            <td class="text-xs-left px-2">{{ item.identity }}</td>
             <td class="text-xs-left px-2">{{ item.email }}</td>
             <td class="text-xs-left px-2">{{ item.totalPeople }}</td>
             <td class="text-xs-left px-2">{{ item.luggage }}</td>
@@ -72,6 +73,7 @@ export default {
         { text: '地址', value: 'targetAddress', class: 'text-xs-left px-2' },
         { text: '姓名', value: 'name', class: 'text-xs-left px-2' },
         { text: '手機', value: 'phone', class: 'text-xs-left px-2' },
+        { text: '身份證後四碼', value: 'identity', class: 'text-xs-left px-2' },
         { text: 'email', value: 'email', class: 'text-xs-left px-2' },
         { text: '人數', value: 'totalPeople', class: 'text-xs-left px-2' },
         { text: '行李數', value: 'totalPeople', class: 'text-xs-left px-2' },
