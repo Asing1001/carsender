@@ -65,6 +65,9 @@
           </p>
         </v-layout>
       </v-layout>
+      <div class="pt-4 text-xs-center">
+        <img style="width:150px" src="~/assets/img/logo_payeasy.png" alt="" />
+      </div>
     </section>
     <section class="blue-grey darken-4 pa-3">
       <v-layout align-center justify-center>
