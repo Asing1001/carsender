@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const Order = require('./model/order')
 const CarPrice = require('./model/carPrice')
+const Misc = require('./model/misc')
 const pay = require('./pay')
 const { logger } = require('./utils/logger')
 const { getCarPrice } = require('./utils/getCarPrice')
@@ -61,6 +62,11 @@ async function getOrderAmount(order) {
 router.route('/carPrice').get(async (req, res) => {
   const carPrice = await CarPrice.find({}).exec()
   res.send(carPrice)
+})
+
+router.route('/reminder').get(async (req, res) => {
+  const misc = await Misc.findOne({ key: 'reminder' }).exec()
+  res.send(misc.value)
 })
 
 router.route('/order').post(async (req, res) => {
