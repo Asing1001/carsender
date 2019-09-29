@@ -51,6 +51,9 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
+  manifest: {
+    name: '凡亨派車'
+  },
   /*
    ** Axios module configuration
    */
