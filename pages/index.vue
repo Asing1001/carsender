@@ -127,7 +127,7 @@ export default {
         },
         {
           image: '',
-          name: 'BENZ、BMV'
+          name: 'BENZ、BMW'
         },
         {
           image: '',
