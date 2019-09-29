@@ -1,6 +1,7 @@
 // see https://www.fastcomet.com/tutorials/nodejs/google-spreadsheet-package for detail
 const GoogleSpreadsheet = require('google-spreadsheet')
 const CarPrice = require('../api/model/carPrice')
+const Misc = require('../api/model/misc')
 const { connect } = require('../api/connection')
 const creds = require('./cronjob-6fe799c40a6f.json')
 
@@ -14,8 +15,8 @@ doc.useServiceAccountAuth(creds, function(err) {
   if (err) {
     console.error(err)
   }
-  // Get all of the rows from the spreadsheet.
 
+  // Get all of the rows from the spreadsheet.
   doc.getRows('opp212v', function(err, rows) {
     if (err) {
       console.error(err)
@@ -38,6 +39,10 @@ doc.useServiceAccountAuth(creds, function(err) {
     }
 
     const cars = [normalCar, boxCar]
+    const reminder = {
+      key: 'reminder',
+      value: rows[0]['備註']
+    }
 
     connect().then(async connection => {
       const promises = cars.map(car =>
@@ -45,9 +50,18 @@ doc.useServiceAccountAuth(creds, function(err) {
           upsert: true
         }).exec()
       )
+
       try {
-        const carPrices = await Promise.all(promises)
-        console.log(carPrices)
+        const oldCarPrices = await Promise.all(promises)
+        console.log(oldCarPrices)
+        const oldReminder = await Misc.findOneAndUpdate(
+          { key: reminder.key },
+          reminder,
+          {
+            upsert: true
+          }
+        ).exec()
+        console.log(oldReminder)
       } catch (err) {
         console.error(err)
       }
