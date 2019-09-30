@@ -1,7 +1,7 @@
 {
   "name": "carsender",
   "version": "1.0.0",
-  "description": "car booking system",
+  "description": "包車 機場接送",
   "author": "Sing <sing@paddingleft.com>",
   "private": true,
   "scripts": {

@@ -11,8 +11,7 @@ module.exports = {
     title: '凡亨接送機預約系統',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '包車 機場接送' }
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -52,7 +51,11 @@ module.exports = {
     '@nuxtjs/pwa'
   ],
   manifest: {
-    name: '凡亨派車'
+    name: '凡亨接送機預約',
+    short_name: '凡亨接送機'
+  },
+  meta: {
+    lang: 'zh-Hant'
   },
   /*
    ** Axios module configuration
