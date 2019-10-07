@@ -3,12 +3,20 @@
     <v-parallax :src="backgroundImg" :height="windowHeight">
       <v-container d-flex align-center fluid="true">
         <div class="text-xs-center primary--text">
-          <h1>凡亨國際租賃有限公司</h1>
+          <h1>
+            <img
+              style="width:150px"
+              src="~/assets/img/logo_payeasy.png"
+              alt=""
+            /><span class="">旅遊</span>
+            <div>X</div>
+            凡亨國際租賃有限公司
+          </h1>
           <p>選擇凡亨，凡事亨通</p>
-          <p>
+          <!-- <p>
             機場接送、包車旅遊、醫療接駁、
             <br />企業長租、個人短租、新舊車買賣
-          </p>
+          </p> -->
           <v-btn slot="activator" color="primary" dark to="/order/create"
             >開始預約</v-btn
           >
@@ -65,9 +73,6 @@
           </p>
         </v-layout>
       </v-layout>
-      <div class="pt-4 text-xs-center">
-        <img style="width:150px" src="~/assets/img/logo_payeasy.png" alt="" />
-      </div>
     </section>
     <section class="blue-grey darken-4 pa-3">
       <v-layout align-center justify-center>
