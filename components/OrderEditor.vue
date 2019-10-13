@@ -19,7 +19,7 @@
         <v-select
           v-model="serviceType"
           name="serviceType"
-          :items="items"
+          :items="serviceItems"
           :error-messages="serviceTypeErrors"
           :disabled="isPreview"
           label="預約類型"
@@ -139,7 +139,7 @@
         ></v-text-field>
         <v-select
           v-model="carType"
-          :items="carPrices"
+          :items="carPrices(serviceType)"
           label="選擇車種"
           item-text="displayName"
           :item-value="item => item.carType"
@@ -237,8 +237,15 @@ const formNames = {
   2: 'basicInfoForm'
 }
 
+const serviceItems = [
+  '送機 (雙北 => 桃園機場)',
+  '接機 (桃園機場 => 雙北)',
+  '送機 (雙北 => 松山機場)',
+  '接機 (松山機場 => 雙北)'
+]
+
 const defaultData = {
-  serviceType: null,
+  serviceType: serviceItems[0],
   planeNo: '',
   pickUpDate: null,
   pickUpTime: null,
@@ -299,7 +306,7 @@ export default {
     dateMenu: false,
     timeMenu: false,
     cities,
-    items: ['送機 (雙北 => 桃園機場)', '接機 (桃園機場 => 雙北)'],
+    serviceItems,
     step: 1
   }),
   computed: {
@@ -312,12 +319,11 @@ export default {
         return 0
       }
       return getCarPrice({
-        car: this.carPrices.find(car => car.carType === this.carType),
+        car: this.carPrices(this.serviceType).find(
+          car => car.carType === this.carType
+        ),
         pickUpTime: this.pickUpTime
       })
-    },
-    isPickUp() {
-      return this.items.indexOf(this.serviceType) === 1
     },
     isPreview() {
       return false

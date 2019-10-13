@@ -53,7 +53,11 @@ router.route('/confirm').get(async (req, res, next) => {
 })
 
 async function getOrderAmount(order) {
-  const car = await CarPrice.findOne({ carType: order.carType }).exec()
+  const airport = order.serviceType.includes('松山') ? '松山' : '桃園'
+  const car = await CarPrice.findOne({
+    airport,
+    carType: order.carType
+  }).exec()
   logger.info('find car for the order', car)
   const orderPrice = getCarPrice({ car, pickUpTime: order.pickUpTime })
   return orderPrice

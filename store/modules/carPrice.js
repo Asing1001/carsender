@@ -8,7 +8,10 @@ export default {
     }
   },
   getters: {
-    carPrices: state => state.carPrices
+    carPrices: state => serviceType => {
+      const airport = serviceType.includes('松山') ? '松山' : '桃園'
+      return state.carPrices.filter(carPrice => carPrice.airport === airport)
+    }
   },
   actions: {
     async [FETCH_CAR_PRICE]({ commit }) {
