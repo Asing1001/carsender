@@ -21,24 +21,12 @@ doc.useServiceAccountAuth(creds, function(err) {
     if (err) {
       console.error(err)
     }
-
-    const normalCarRow = rows[0]
-    const normalCar = {
-      displayName: normalCarRow['車種'],
-      carType: 'normal',
-      daytimePrice: normalCarRow['日間價格'],
-      nighttimePrice: normalCarRow['夜間價格']
-    }
-
-    const boxCarRow = rows[1]
-    const boxCar = {
-      displayName: boxCarRow['車種'],
-      carType: 'box',
-      daytimePrice: boxCarRow['日間價格'],
-      nighttimePrice: boxCarRow['夜間價格']
-    }
-
-    const cars = [normalCar, boxCar]
+    const cars = [
+      getCarPrice(rows[0]),
+      getCarPrice(rows[1]),
+      getCarPrice(rows[2]),
+      getCarPrice(rows[3])
+    ]
     const reminder = {
       key: 'reminder',
       value: rows[0]['備註']
@@ -46,9 +34,13 @@ doc.useServiceAccountAuth(creds, function(err) {
 
     connect().then(async connection => {
       const promises = cars.map(car =>
-        CarPrice.findOneAndUpdate({ carType: car.carType }, car, {
-          upsert: true
-        }).exec()
+        CarPrice.findOneAndUpdate(
+          { carType: car.carType, airport: car.airport },
+          car,
+          {
+            upsert: true
+          }
+        ).exec()
       )
 
       try {
@@ -69,3 +61,15 @@ doc.useServiceAccountAuth(creds, function(err) {
     })
   })
 })
+
+const getCarPrice = (row, airport) => {
+  const displayName = row['車種']
+  const carType = displayName.includes('一般車') ? 'normal' : 'box'
+  return {
+    displayName,
+    carType,
+    airport: row['機場'],
+    daytimePrice: row['日間價格'],
+    nighttimePrice: row['夜間價格']
+  }
+}

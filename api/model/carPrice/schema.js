@@ -18,5 +18,10 @@ module.exports = {
     type: String,
     required: true,
     maxlength: 200
+  },
+  airport: {
+    type: String,
+    required: true,
+    maxlength: 100
   }
 }
