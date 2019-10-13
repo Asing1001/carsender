@@ -120,9 +120,20 @@ router.route('/orders').get(isAuthenticated, (req, res) => {
   })
 })
 
+router.route('/order/:_id').get((req, res) => {
+  Order.findOne({ _id: req.params._id }, (err, doc) => {
+    if (err) {
+      res.status(500).json({ message: err })
+    } else if (!doc) {
+      res.status(404)
+    } else {
+      res.send(getLineOrderTemplate(doc.toJSON()))
+    }
+  })
+})
+
 router
   .use(isAuthenticated)
-  .route('/order/:_id')
   .delete((req, res) => {
     Order.deleteOne({ _id: req.params._id }, err => {
       if (err) {
