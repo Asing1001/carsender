@@ -40,7 +40,7 @@
             ></v-select>
           </v-flex>
           <v-spacer></v-spacer>
-          <v-flex xs6>
+          <v-flex xs5>
             <v-select
               v-model="targetArea"
               :items="targetAreas"
@@ -51,6 +51,16 @@
               :error-messages="targetAreaErrors"
             ></v-select>
           </v-flex>
+          <v-tooltip v-model="showTooltip" top>
+            <template v-slot:activator="{ on }">
+              <v-icon v-on="on" @click="showTooltip = !showTooltip"
+                >help</v-icon
+              >
+            </template>
+            <span
+              >偏遠行政區暫不開放接送服務，含：淡水/汐止/深坑/石碇/瑞芳/坪林/烏來/萬里/三芝/金山/平溪/石門/雙溪/貢寮/新店花園新城/楊梅/龍潭/新屋/大溪/復興/芎林/橫山/北埔/峨眉/五峰/香山/尖石</span
+            >
+          </v-tooltip>
         </v-layout>
         <v-text-field
           v-model="targetAddress"
@@ -303,6 +313,7 @@ export default {
   },
   data: () => ({
     ...defaultData,
+    showTooltip: false,
     dateMenu: false,
     timeMenu: false,
     cities,
