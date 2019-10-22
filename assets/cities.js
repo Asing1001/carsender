@@ -22,7 +22,7 @@ const cities = [
       // { 'areaName': '萬里區', 'zipCode': '207' },
       // { 'areaName': '金山區', 'zipCode': '208' },
       { areaName: '板橋區', zipCode: '220' },
-      { areaName: '汐止區', zipCode: '221' },
+      // { areaName: '汐止區', zipCode: '221' },
       // { 'areaName': '深坑區', 'zipCode': '222' },
       // { 'areaName': '石碇區', 'zipCode': '223' },
       // { 'areaName': '瑞芳區', 'zipCode': '224' },
