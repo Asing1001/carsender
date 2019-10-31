@@ -63,11 +63,9 @@ doc.useServiceAccountAuth(creds, function(err) {
 })
 
 const getCarPrice = (row, airport) => {
-  const displayName = row['車種']
-  const carType = displayName.includes('一般車') ? 'normal' : 'box'
   return {
-    displayName,
-    carType,
+    displayName: row['畫面顯示'],
+    carType: row['車種'].trim(),
     airport: row['機場'],
     daytimePrice: row['日間價格'],
     nighttimePrice: row['夜間價格']
