@@ -19,10 +19,12 @@
           :headers="headers"
           :items="orders"
           :search="search"
+          :pagination.sync="pagination"
           rows-per-page-text="每頁筆數"
           :rows-per-page-items="[10, 20, 50, 100]"
         >
           <template slot="items" slot-scope="{ item }">
+            <td class="text-xs-left px-2">{{ item.createdAt }}</td>
             <td class="text-xs-left px-2">{{ item.status }}</td>
             <td class="text-xs-left px-2">{{ item.serviceType }}</td>
             <td class="text-xs-left px-2">{{ item.planeNo }}</td>
@@ -64,7 +66,13 @@ export default {
     return {
       dialog: false,
       search: '',
+      pagination: { descending: true },
       headers: [
+        {
+          text: '訂單成立時間',
+          value: 'createdAt',
+          class: 'text-xs-left px-2'
+        },
         { text: '狀態', value: 'status', class: 'text-xs-left px-2' },
         { text: '預約類型', value: 'serviceType', class: 'text-xs-left px-2' },
         { text: '航班編號', value: 'planeNo', class: 'text-xs-left px-2' },
