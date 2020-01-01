@@ -111,7 +111,7 @@ router.route('/order').post(async (req, res) => {
 })
 
 router.route('/orders').get(isAuthenticated, (req, res) => {
-  Order.find({}, (err, orders) => {
+  Order.find({ status: { $ne: ORDER_STATUS.DELETE } }, (err, orders) => {
     if (err) {
       res.status(500).json({ message: err })
     } else {
@@ -134,14 +134,19 @@ router.route('/order/:_id').get((req, res) => {
 
 router
   .use(isAuthenticated)
+  .route('/order/:_id')
   .delete((req, res) => {
-    Order.deleteOne({ _id: req.params._id }, err => {
-      if (err) {
-        res.status(500).json({ message: err })
-      } else {
-        res.json({ ok: true })
+    Order.updateOne(
+      { _id: req.params._id },
+      { status: ORDER_STATUS.DELETE },
+      err => {
+        if (err) {
+          res.status(500).json({ message: err })
+        } else {
+          res.json({ ok: true })
+        }
       }
-    })
+    )
   })
   .put((req, res) => {
     Order.updateOne({ _id: req.params._id }, req.body, (err, order) => {
