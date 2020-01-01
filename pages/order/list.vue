@@ -126,7 +126,7 @@ export default {
       val || this.close()
     }
   },
-  async created() {
+  async mounted() {
     await this.$store.dispatch('getOrders')
   },
   methods: {
