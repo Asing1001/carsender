@@ -24,7 +24,9 @@
           :rows-per-page-items="[10, 20, 50, 100]"
         >
           <template slot="items" slot-scope="{ item }">
-            <td class="text-xs-left px-2">{{ item.createdAt }}</td>
+            <td class="text-xs-left px-2">
+              {{ item.createdAt.substr(0, 10) }}
+            </td>
             <td class="text-xs-left px-2">{{ item.status }}</td>
             <td class="text-xs-left px-2">{{ item.serviceType }}</td>
             <td class="text-xs-left px-2">{{ item.planeNo }}</td>
