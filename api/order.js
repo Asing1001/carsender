@@ -1,4 +1,4 @@
-import { orderLineNotify } from './lineNotify'
+import { lineNotify } from './lineNotify'
 
 const express = require('express')
 const mongoose = require('mongoose')
@@ -19,10 +19,19 @@ const isAuthenticated = (req, res, next) => {
   }
 }
 
+export async function orderLineNotify(order) {
+  try {
+    logger.info('send notification message')
+    await lineNotify(getLineOrderTemplate(order))
+  } catch (error) {
+    logger.error(error)
+  }
+}
+
 export const getLineOrderTemplate = ({ __v, ...order }) => {
   return Object.entries(order).reduce((prev, [key, value]) => {
     const outputKey = (orderSchema[key] && orderSchema[key]['zh-cn']) || key
-    return (prev += `${outputKey}: ${value}<br>`)
+    return (prev += `${outputKey}: ${value}\n`)
   }, '')
 }
 
@@ -44,7 +53,7 @@ router.route('/confirm').get(async (req, res, next) => {
     order.transactionId = transactionId
     order.status = ORDER_STATUS.PAID
     await order.update(order).exec()
-    orderLineNotify(order.toJSON())
+    await orderLineNotify(order.toJSON())
     res.redirect(`/order/result?orderId=${order._id}`)
   } catch (err) {
     logger.error(err)
@@ -98,7 +107,7 @@ router.route('/order').post(async (req, res) => {
     const orderDoc = await Order.create(order)
 
     if (order.payment.toUpperCase() === 'ATM') {
-      orderLineNotify(order)
+      await orderLineNotify(order)
       redirectUrl = `/order/atm?orderId=${order._id}`
     }
     logger.info('order create!', orderDoc.toJSON())
