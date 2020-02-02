@@ -29,6 +29,7 @@
             </td>
             <td class="text-xs-left px-2">{{ item.status }}</td>
             <td class="text-xs-left px-2">{{ item.serviceType }}</td>
+            <td class="text-xs-left px-2">{{ item.carType }}</td>
             <td class="text-xs-left px-2">{{ item.planeNo }}</td>
             <td class="text-xs-left px-2 nowrap">{{ item.pickUpDate }}</td>
             <td class="text-xs-left px-2">{{ item.pickUpTime }}</td>
@@ -77,6 +78,7 @@ export default {
         },
         { text: '狀態', value: 'status', class: 'text-xs-left px-2' },
         { text: '預約類型', value: 'serviceType', class: 'text-xs-left px-2' },
+        { text: '車種', value: 'carType', class: 'text-xs-left px-2' },
         { text: '航班編號', value: 'planeNo', class: 'text-xs-left px-2' },
         { text: '乘車日期', value: 'pickUpDate', class: 'text-xs-left px-2' },
         { text: '時間', value: 'pickUpTime', class: 'text-xs-left px-2' },
